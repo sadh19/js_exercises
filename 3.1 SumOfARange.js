@@ -4,16 +4,16 @@ function range(start, end, step) {
 
   if (!step) {
     for (let init = start + 1; init <= end; init = init + 1) {
-      rangeNumbers.push(init)
+      rangeNumbers.push(init);
     }
   } else {
     if (step > 0) {
       for (let init = start + step; init <= end; init = init + step) {
-        rangeNumbers.push(init)
+        rangeNumbers.push(init);
       }
     } else {
       for (let init = start - Math.abs(step); init >= end; init = init - Math.abs(step)) {
-        rangeNumbers.push(init)
+        rangeNumbers.push(init);
       }
     }
   }
@@ -29,14 +29,14 @@ function sum(numbers) {
   let counter = 0;
 
   for (let init = 0; init <= numbers.length - 1; init++) {
-    counter = + counter + numbers[init]
+    counter = + counter + numbers[init];
   }
 
   return counter;
 
 }
 
-console.log(range(10, 1, -2))
+console.log(range(10, 1, -2));
 console.log(sum(range(1, 10)));
 
 
