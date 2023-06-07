@@ -46,31 +46,19 @@ function isTheListOutOfElements(element) {
 }
 
 function nth(list, index) {
-
-  let currentElement = list;
-  let foundedElement = undefined;
-  let isElementFounded = isTheElementRequired(list, index);
-  let isListOutOfElements = isTheListOutOfElements(list["rest"]);
-
-
-  while (!isListOutOfElements && !isElementFounded) {
-    currentElement = currentElement["rest"];
-    isListOutOfElements = isTheListOutOfElements(currentElement["rest"]);
-    isElementFounded = isTheElementRequired(currentElement, index);
+  while (!isTheListOutOfElements(list["rest"]) && !isTheElementRequired(list, index)) {
+    list = list["rest"];
   }
 
-  if (isTheElementRequired(currentElement, index)) {
-    foundedElement = { ...currentElement };
+  if (isTheElementRequired(list, index)) {
+    return list;
   }
 
-  return foundedElement;
-
+  return undefined;
 
 }
 
-function nthRecursive() {
 
-}
 
 let testArray = [1, 2, 3];
 let testList = { value: 1, rest: { value: 2, rest: { value: 3, rest: { value: 4, rest: null } } } };
@@ -79,4 +67,4 @@ let testList = { value: 1, rest: { value: 2, rest: { value: 3, rest: { value: 4,
 //console.log(arrayToList(testArray));
 //console.log(listToArray(testList));
 //console.log(prepend({ value: 0 }, { value: 1, rest: { value: 2, rest: { value: 3, rest: null } } }));
-console.log(nth(testList, 7));
+//console.log(nth(testList, 0));
