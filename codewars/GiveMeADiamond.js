@@ -49,4 +49,5 @@ console.log(diamond(2));
 console.log(diamond(3));
 console.log(diamond(5));
 console.log(diamond(7));
+console.log(diamond(9));
 
