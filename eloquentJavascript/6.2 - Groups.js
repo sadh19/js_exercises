@@ -1,5 +1,4 @@
 class Group {
-
   constructor() {
     this.group = [];
   }
@@ -8,7 +7,6 @@ class Group {
     if (this.group.indexOf(element) === -1) {
       this.group.push(element);
     }
-
   }
 
   delete(element) {
@@ -22,9 +20,7 @@ class Group {
   has(element) {
     return this.group.indexOf(element) !== -1;
   }
-
 }
-
 
 let group = new Group();
 group.add("2");
@@ -34,7 +30,7 @@ group.delete("2");
 group.add("1");
 group.add(1);
 
-
 console.log(group);
 console.log(group.has("1"));
 console.log(group.has(3));
+
