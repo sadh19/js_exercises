@@ -1,25 +1,21 @@
+//Bind es usado para pasar un objeto cuyo contexto toma la misma función, y poder reutlizar la funcion usando el mismo contexto, pero con diferentes parametros
+
 let person = {
-  name: "Saul",
-  age: 24,
+  name: "Adrian Marcelo",
+  age: 36,
 };
 
-let place = {
-  name: "Malecon",
-  age: 52,
+let personTwo = {
+  name: "Marty Robbins",
+  age: 55,
 };
 
-function showData(mood) {
-  return `${this.name} está ${mood}, y eso que tiene ${this.age} años`;
+function displayPersonInformationWithWorkplace(workplace) {
+  return `${this.name} tiene ${this.age} años, y trabaja en ${workplace}`;
 }
 
-//Call es usado para pasar un objeto cuyo contexto toma la misma función, y poder pasarle el resto de parametros a la misma
-console.log(showData.call(person, "feliz"));
+const televisaWorker = displayPersonInformationWithWorkplace.bind(person);
+const texasWorker = displayPersonInformationWithWorkplace.bind(personTwo);
 
-//Apply es usado para pasar un objeto cuyo contexto toma la misma función, y poder pasarle el resto de parametros a la misma, pero como un arreglo
-console.log(showData.apply(place, ["triste"]));
-
-//Bind es usado para pasar un objeto cuyo contexto toma la misma función, y poder reutlizar la funcion usando el mismo contexto, pero con diferentes parametros
-const personaTemerosa = showData.bind(person);
-const personaEnojada = showData.bind(person);
-console.log(personaTemerosa("temeroso"));
-console.log(personaEnojada("enojada"));
+console.log(televisaWorker("Televisa"));
+console.log(texasWorker("Texas"));
