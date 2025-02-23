@@ -3,7 +3,9 @@ function isPalindrome(word) {
 
   let wordArr = word.split("");
 
-  for (let i = wordArr.length - 4; i >= 0; i--) {
+  console.log(wordArr.length - 3);
+
+  for (let i = wordArr.length - 4; i > 0; i--) {
     if (wordArr[i] !== wordArr[leftPointer]) {
       return false;
     } else {
@@ -14,10 +16,11 @@ function isPalindrome(word) {
   return true;
 }
 
-console.log(isPalindrome("oro"));
-console.log(isPalindrome("seres"));
-console.log(isPalindrome("radar"));
-console.log(isPalindrome("ana"));
-console.log(isPalindrome("comida"));
-console.log(isPalindrome("reconocer"));
-console.log(isPalindrome("love"));
+// console.log(isPalindrome("oro"));
+console.log(isPalindrome("abba"));
+// console.log(isPalindrome("seres"));
+// console.log(isPalindrome("radar"));
+// console.log(isPalindrome("ana"));
+// console.log(isPalindrome("comida"));
+// console.log(isPalindrome("reconocer"));
+// console.log(isPalindrome("love"));
