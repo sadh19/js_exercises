@@ -36,15 +36,12 @@ function same(firstArr, secondArr) {
     }
   }
 
-  console.log(frecuencyCounterOne);
-  console.log(frecuencyCounterTwo);
-
   return true;
 }
 
-console.log(same([1, 2, 2, 3], [4, 1, 9, 4])); //true
-console.log(same([1, 2, 3], [1, 9])); //false
-console.log(same([1, 2, 1], [4, 4, 1])); //false
+console.log(same([1, 2, 2, 3], [4, 1, 9, 4])); //? true
+console.log(same([1, 2, 3], [1, 9])); //? false
+console.log(same([1, 2, 1], [4, 4, 1])); //? false
 
 //* Anagrama
 //* Dados dos strings, verifica si el segundo string es un anagrama del primero, e.g. (cinema,iceman)
