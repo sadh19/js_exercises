@@ -1,0 +1,163 @@
+IAM (Identity and Access Management)
+
+- Para iniciar en AWS, debes crear una cuenta Root(De preferencia, que esta no administre mas que lo necesario).
+- Los usuarios son personas dentro de tu organización y pueden ser agrupados.
+- Los grupos solo contienen usuarios, no otros grupos.
+- Los usuarios pueden pertenecer a n cantidad de grupos o a ninguno.
+ 
+ //Permisos
+- En AWS, se aplica el principio de mínimo privilegio (no dar mas permisos de lo necesario).
+- A los usuarios o grupos se les pueden asignar doc JSON llamados políticas, donde se definen los permisos de los usuarios.
+- Puedes asignar políticas a grupos.
+ 
+{
+    "Version": "2012-10-17",
+    "Id":"S3-Permissions",
+    "Statement": [
+        {
+            "Sid":"1",
+            "Effect": "Allow",
+            "Principal":{
+                "AWS":["arn:aws:iam::123456789:root"]
+            },
+            "Action": [
+                "s3:ListBucket",
+                "s3:ListAllMyBuckets"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudtrail:LookupEvents"
+            ],
+            "Resource": "*"
+        }
+    ]
+} 
+
+- Version: Versión del lenguaje de la política, siempre incluye "2012-10-17"
+- Id: Identificador de la política (opcional)
+- Statement: Una o mas declaraciones individuales (obligatorio)
+    - Sid: Un Identificador para la declaración (opcional)
+    - Effect: Si la sentencia permite o niega el acceso (Allow/Deny)
+    - Principal:Cuenta/Usuario/Rol al que se le aplica esta política
+    - Action: Lista de acciones que esta política permite o deniega
+    - Resource: Lista de recursos a los que se aplican las acciones
+    - Condition: Condiciones para cuando esta política está en efecto (opcional)
+    
+//Política de contraseñas
+- Puedes configurar una política de contraseñas
+    - Longitud mínima
+    - Caracteres requeridos
+    - Permitir que los usuarios IAM cambien su contraseña.
+    - Que la cambien después de cierto tiempo
+    - Que no puedan reutilizarla
+    
+//Claves de acceso
+- Para acceder a AWS, tienes 3 opciones:
+    - Consola de administración de AWS
+    - CLI
+    - SDK
+- Las claves de acceso se generan a través de la consola de AWS
+- Los usuarios gestionan sus propias claves de acceso
+    - ID de la clave de acceso
+    - Clave de acceso secreta
+    
+//Roles IAM para servicios
+- Algún servicio tendrá que realizar acciones en tu nombre, para ello se asignarán permisos a los servicios AWS con IAM
+- Roles comunes:
+    - EC2
+    - Lambda
+    
+//Herramientas de seguridad IAM
+- IAM Credentials Report
+    - Un informe que enumera todos los usuarios de tu cuenta y el estado de sus credenciales
+- IAM Access Advisor
+    - Muestra los permisos de servicio concedidos a un usuario y cuando se accedió a los mismos por última vez
+
+//Buenas prácticas
+- No utilices la cuenta Root para la configuración de la cuenta AWS
+- Un usuario físico = Un usuario AWS
+- Asignar usuarios a grupos 
+- Asignar permisos a grupos
+- Política de contraseñas fuerte
+- Utilizar 2FA
+- Crear y utilizar roles para dar permisos a los servicios de AWS
+- Utilizar claves de acceso para el CLI/SDK
+
+===================================================================================================
+
+EC2 (Elastic Compute Cloud)/(IASS - Infrastructure as a service) 
+
+- Alquilar máquinas virtuales (EC2)
+- Almacenar datos en unidades virtuales (EBS)
+- Distribuir la carga entre máquinas (ELB)
+- Escalar los servicios mediante un Auto Scaling Group (ASG)
+
+//Opciones configuración EC2
+- SO
+- CPU
+- RAM
+- Almacenamiento 
+    - Red:(EBS y EFS)
+    - Hardware:(EC2 Instance Store)
+- Tarjeta de Red
+    - Velocidad
+    - Dirección IP pública
+- Reglas del firewall (Grupo de Seguridad)
+- Script de arranque
+
+//Tipos de instancia EC2
+- Puedes utilizar diferentes tipos de instancias optimizadas para tus necesidades.
+- Nomenclatura:
+    - m5.2xlarge
+        - m: Clase de la instancia
+        - 5: Generación
+        - 2xlarge: Tamaño dentro de la clase de instancia
+
+- Instancias próposito general
+  - Excelente para una diversidad de cargas de trabajo, como servidores web, o repositorios.
+  - Equilibrio entre computación, memoria y red.
+
+- Instancias computación optimizada
+  - Ideal para tareas de cálculo intensivo que requieren procesadores de alto rendimiento.
+  - Cargas de trabajo de procesamiento por lotes, computación de alto rendimiento, Machine Learning, etc.
+
+- Instancias memoria optimizada
+  - Rápido rendimiento para cargas de trabajo que procesan grandes conjuntos de datos en memoria.
+  - Alto rendimiento, base de datos relacionales/no relacionales, almacenes de caché, base de datos en memoria, aplicaciones que realizan el procesamiento en tiempo real de grandes datos no estructurados, etc.
+
+- Instancias almacenamiento optimizada
+  - Ideal para tareas de almacenamiento intensivo que requieran un acceso alto y secuencial de lectura y escritura.
+  - Sistemas de procesamiento de transacciones en línea (OLTP) de alta frecuencia.
+  - Base de datos relacionales y NoSQL.
+  - Caché para DB en memoria (Redis).
+  - Aplicaciones para almacenamiento de datos. 
+
+//Grupos de seguridad
+- Son la base de la seguridad de la red en AWS.
+- Controlan como se permite el tráfico de entrada y salida de nuestras instancias AWS.
+- Solo contienen reglas de permiso.
+- Pueden hacer referencia por IP o por grupo de seguridad.
+- Actuan como un firewall.
+- Regulan:
+    - El acceso a los permisos
+    - Rangos de IP autorizados (IPv4 y IPv6)
+    - Control de la red de entrada (de otros a instancia)
+    - Control de la red de salida(desde la instancia a otros)
+- Puede adjuntarse a múltiples instancias.
+- Bloqueado a una combinación de región/VPC.
+- Vive fuera del EC2 (si el tráfico está bloqueado, el EC2 ni lo verá)
+- Todo el tráfico de entrada está blqueado por defecto.
+- Todo el tráfico de salida está autorizado por defecto.
+
+//Puertos que hay que conocer 
+- 22 = SSH (Secure Shell)
+- 21 = FTP (File Transfer Protocol)
+- 22 = SFTP (Secure File Transfer Protocol)
+- 80 = HTTP (Acesso a sitios web no seguros)
+- 443 = HTTPS (Acesso a sitios web seguros)
+- 3389 = RDP (Remote Desktop Protocol)
+
+
