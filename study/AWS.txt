@@ -160,4 +160,95 @@ EC2 (Elastic Compute Cloud)/(IASS - Infrastructure as a service)
 - 443 = HTTPS (Acesso a sitios web seguros)
 - 3389 = RDP (Remote Desktop Protocol)
 
+//Conectarse mediante SSH (MacOS/Linux)
+- Debes tener acceso a tu par de claves (archivo .pem)
+- Al crear una instancia, seleccionar el par de claves, y asegurarse que la instancia está en ejecución.
+- Abrir terminal, moverse a la ruta donde se encuentra el archivo .pem y correr el comando: 
+    - ssh -i nombreArchivo.pem ec2-user@ipInstancia
+- Si da un error de seguridad, debes cambiar los permisos del archivo mediante el comando:
+    - sudo chmod 0400 nombreArchivo.pem
+    
+//Roles de instancia EC2
+- Puedes asigna ciertos permisos a una instancia, mediante un rol.
+
+//Opciones de compra de instancias EC2
+  - On-Demand
+      - Carga de trabajo corta, precio prededible, pago por segundos
+      - Pagas por lo que usas
+      - Tiene el costo mas elevado
+      - Sin compromiso a largo plazo
+      - Recomendado para cargas de trabajo a corto plazo y sin interrupciones
+  - Reserved (1 y 3 años)
+    - Instancias reservadas
+        - Cargas de trabajo largas
+        - Reservas de atributos de instancia específicos(tipo, región, ocupación, SO)
+        - Alcance de la instancia reservada(Región o zona)
+        - Recomendado para aplicaciones de uso constante(DB por ejemplo)
+    - Instancias reservadas convertibles
+        - Cargas de trabajo largas con instancias flexibles
+        - Puedes cambiar el tipo de instancia EC2, la familia de instancias, el SO, etc.
+  - Planes de ahorro (1 y 3 años)
+    - Compromiso con una cantidad de uso, carga de trabajo larga 
+    - Te debes comprometer a un determinado tipo de uso
+    - El uso fuera de este plan se factura bajo demanda
+    - Bloqueado a una familia de instancias y a una región de AWS (por ejemplo, m5 en us-east-1)
+    - Flexible a través de: tamaño de instancia, SO, tenencia(anfitrión, dedicado, por defecto)
+  - Spot
+    - Cargas de trabajo cortas. pueden perder instancias(menos fiables)
+    - Instancias que puedes perder si su precio máximo es inferior al precio spot actual
+    - Útiles para las cargas de trabajo que son resistentes a fallos:
+      - Trabajos por lotes
+      - Análisis de datos
+      - Procesamiento de imágenes
+      - Carga de trabajo distribuida
+      - Cargas de trabajo con horas de inicio y fin flexibles
+    - No es adecuado para trabajos críticos o de DB
+  - Host dedicados
+    - Reserve un servidor físico completo, controle la ubicación de las instancias  
+    - Permite abordar los requisitos de normativas y utilizar licencias de software vinculadas al servidor 
+    - Opciones de compra
+      - On-Demand
+        - Pago por segundos
+      - Reservado
+        - 1 o 3 años
+    - Útil para el software que tiene un modelo de licencia (BYOL)
+    - Útil para empresas que tienen fuertes necesidades de regulación
+  - Instancias dedicadas
+    - Ningún otro cliente compartirá tu hardware
+    - Puedes compartir el hardware con otras instancias de la misma cuenta
+    - No hay control sobre la ubicación de las instancias
+  - Reservas de capacidad
+    - Reserva de capacidad en una AZ específica para cualquier duración
+    - Sin compromiso de tiempo
+    - Adecuado para cargas de trabajo ininterrumpidas a corto plazo que necesitan estar en una AZ específica
+
+===================================================================================================
+
+Almacenamiento de instancias EC2
+
+//Volumen EBS (Elastic Block Store)
+- Es una unidad de red que puede adjuntar a una instancia EC2 mientras se ejecutan.
+- Permite que las instancias persistan datos, incluso después de su finalización.
+- Solo pueden montarse a una instancia a la vez.
+- Están vinculados a una zona de disponibilidad específica (no puede moverse a otra "directamente", solo mediante un Snapshot)
+- Nivel gratuito: 30Gb de tipo Propósito General
+- Se puede separar de una instancia y conectarla a otra rápidamente
+- Tiene una capacidad provisionada (tamaño en GBs, e IOPS)
+- Se facturará la capacidad provisionada (no importa si no se usa toda)
+- Puedes activar el atributo "Borrar al terminar", cuando la instancia finalice, y esto elimina el volumen EBS
+
+//Snapshots
+- Son copias de seguridad de los datos almacenados en un volumen EBS
+- También se utilizan para mover los volumenes EBS a través de distintas AZ y regiones
+  - Se crea un snapshot de un volumen EBS, se mueve el archivo a la otra zona, y lo restauras en la nueva instancia
+  - La restauración del archivo tarda entre 24 y 72 horas
+- Cuenta con papelera de reciclaje
+  - Puedes configurar las reglas de retención para guardar las snapshot por determinado tiempo (de 1 día a un año)
+
+
+
+
+
+
+
 
