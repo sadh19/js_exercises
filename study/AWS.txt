@@ -245,10 +245,68 @@ Almacenamiento de instancias EC2
 - Cuenta con papelera de reciclaje
   - Puedes configurar las reglas de retención para guardar las snapshot por determinado tiempo (de 1 día a un año)
 
+//AMI (Amazon Machine Image)
+- Son personalizaciones de las instancias EC2
+- Configuras tu software, SO, monitorización, etc.
+- Tiempo de arranque más rápido por que todo el software está preempaquetado
+- Puedes crear una AMI a partir de una instancia EC2.
 
+//Almacén de instancias EC2
+- Si necesitas un disco de alto rendimiento, utilizas EC2 Instance Store
+- Mejor rendiemiento I/O
+- Pierden su almacenamiento si se detienen
+- Riesgo de pérdida de datos si el hardware falla
+- Las copias de seguridad y restauración corren por tu cuenta
 
+//Tipos de volumenes EBS
+- Se caracterizan por tamaño, rendimiento, e IOPS
+- Solo se pueden utilizar los volumenes gp2/gp3, io1/io2 como volumenes de arranque
+  - gp2/gp3(General Purpose SSD): Volumen de uso general
+    - Almacenamiento rentable, baja latencia 
+    - Volumenes de arranque del sistema, escritorios virtuales, entornos de desarrollo y prueba
+    - Desde 1Gb hasta 16Tb
+  - io1/io2(SSD): Volumen de mayor rendimiento para cargas de trabajo críticas 
+    - Para aplicaciones empresariales críticas con un rendimiento sostenido de IOPS
+    - Excelente para cargas de trabajo de las DB (sensibles al rendimiento y la consistencia del almacenamiento)
+    - Soporta EBS Multi-attach
+  - st1(HDD): Volumen de disco duro de bajo costo, para cargas de trabajo de acceso frecuente
+  - sc1(HDD): Volumen de disco duro de bajo costo, para cargas de trabajo de acceso menos frecuente
+    - No puede ser un volumen de arranque
+    - De 125Gb a 16Tb
+    - Big data, almacenamiento de datos
+    - Para datos a los que se accede con poca frecuencia
 
+//EBS Multi-attach (Familia io1/io2)
+- Permite que un volumen EBS se pueda adjuntar a una varias instancias EC2 en la misma AZ
+- Cada instancia tiene permisos completos de lectura y escritura en el volumen de alto rendimiento
+- Hasta 16 instancias a la vez
+- Debe utilizar un sistema de archivos compatibles con el clúster(no XFS, EX4,etc)
+- Casos de uso:
+  - Conseguir una mayor disponibilidad de las aplicaciones en clústers de Linux
+  - Operaciones de escritura concurrentes
 
-
+//EFS (Elastic File System)
+- Es un NFS (Network File System) gestionado que puede montarse en muchas EC2
+- Funciona con instancias en multi-AZ
+- Alta disponibilidad, escalable, caro (3xgp2), y se paga por uso
+- Utiliza el protocolo NFSv4
+- Utiliza el grupo de seguridad para control de acceso
+- Compatible con AMI basadas en Linux (no en Windows)
+- Cifrado en reposo mediante KMS
+- Utiliza el sistema de archivos POSIX (Linux) que tiene una API de archivos estandar
+- El sistema de archivos se escala automáticamente
+- Casos de uso:
+  - Gestión de contenidos, servicios Web, intercambio de datos, Wordpress, etc
+  
+//Clases de rendimiento y almacenamiento EFS
+- Clases de almacenamiento
+  - Estándar
+    - Para tus archivos de acceso frecuente
+  - Acceso infrecuenta (IA)
+    - Coste de recuperación de los archivos, menor precio de almacenamiento (Habilita EFS-IA con una política de ciclo de vida)
+- Disponibilidad y durabilidad
+  - Estándar
+    - Multi AZ, ideal para prod
+    - Una zona, ideal para dev, copia de seguridad activada, compatible con EFS-IA
 
 
