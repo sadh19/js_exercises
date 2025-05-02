@@ -1,0 +1,68 @@
+Servicios Next
+- SSR(Server Side Rendering)
+- SSG(Static Site Generation)
+- CSR(Client Side Rendering)
+- ISR(Incremental Static Regeneration)
+- DR(Dynamic Routing)
+
+Sistema de rutas App (App Router)
+- Usa un sistema de enrutamiento basado en la estructura de carpetas dentro de la carpeta App
+- Todos los componentes por defecto que se encuentran dentro de la carpeta app, son server components
+
+Crear un proyecto Next
+- npx create-next-app mi-proyecto
+
+Configurar fuente 
+- En el RooyLayout, importar la fuente.
+
+import {Inter} from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+
+<body className={inter.className}>
+  {children}
+</body>
+
+Crear una page (/about)
+- Dentro de la carpeta app, creo el componente about/page.tsx
+
+export default function About() {
+  return (
+    <div>
+      <h1>About</h1>
+    </div>
+  )
+}
+
+Cambiar metadata de cada page
+- Crear una constante metadata y asignarle un valor a sus atributos
+- Si no encuentra metadata en la página actual, se utiliza la metadata por defecto(layout padre)
+
+  import tpe { Metadata } from 'next'
+
+  const metadata:Metadata = {
+    title: 'About',
+    description: 'About description',
+  }
+
+Layout
+  - Layout principal (RootLayout)
+  - Layouts anidados (Crear layout.tsx dentro de una carpeta, y todas las page dentro de esa carpeta renderizaran el layout)
+    - Para hacer esto, se puede crear una ruta de esta manera (general), entre parentésis, lo que hace que no sea parte de la ruta de la aplicación.
+
+Server components
+- Puedes hacer uso de async para la generación de componentes
+- Por defecto, todos los componentes son server components
+- No se puede hacer uso de lógica de hooks en server components
+
+Directivas
+'use client'
+'use server'
+
+Next/Link
+- Elementos usados para la navegación dentro de la aplicación
+- Al pasar el mouse sobre el link, hace un prefetch de la ruta especificada, emulando el comportamiento de una SPA, aunque los componentes sean renderizados del lado del servidor
+
+import Link from 'next/link'
+
+<Link href="/about">About</Link>

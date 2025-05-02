@@ -6,8 +6,8 @@
 function countdown(numb) {
   //* 1.- Validamos nuestro caso base
   if (numb < 1) {
-    console.log("Llegaste a 0")
-    return
+    console.log("Llegaste a 0");
+    return;
   }
   console.log(numb);
   //*2.- Cambias el valor original de la entrada
