@@ -1,68 +1,288 @@
-Servicios Next
-- SSR(Server Side Rendering)
-- SSG(Static Site Generation)
-- CSR(Client Side Rendering)
-- ISR(Incremental Static Regeneration)
-- DR(Dynamic Routing)
+NextJs
 
-Sistema de rutas App (App Router)
-- Usa un sistema de enrutamiento basado en la estructura de carpetas dentro de la carpeta App
-- Todos los componentes por defecto que se encuentran dentro de la carpeta app, son server components
+*npm check updates
+- Librería utilizado para actualizar los paquetes de un proyecto. 
+npm i -g npm-check-updates
 
-Crear un proyecto Next
-- npx create-next-app mi-proyecto
+Correr comando dentro del proyecto para actualizar los paquetes
+ncu
 
-Configurar fuente 
-- En el RooyLayout, importar la fuente.
+Crear proyecto
+npx create-next-app nombreAplicacion
 
-import {Inter} from 'next/font/google'
+Correr proyecto
+npm run dev
 
-const inter = Inter({ subsets: ['latin'] })
+Habilitar Turbopack
+Modificar script dev
+"dev": "next dev --turbo"
 
-<body className={inter.className}>
-  {children}
-</body>
+Server components
+- Por defecto, todos los componentes en la carpeta app son server components.
+- Puedes especificar que un componente sea server o client, mediante una directiva declarada al inicio del componente.
+- Los server components pueden ser asincronos, lo que permite hacer uso de estados para saber si está cargando y mostrar un loading spinner o algo así.
+- En un server component, no puedes utilizar hooks que disparan acciones del lado del cliente.
 
-Crear una page (/about)
-- Dentro de la carpeta app, creo el componente about/page.tsx
+Directiva server component
+'use server'
+
+Directiva client component
+'use client'
+
+
+
+App Router
+Se usa el árbol de directorios dentro de la carpeta app para administrar las rutas de la aplicación.
+* Todos los componentes dentro la carpeta app son por defecto server components.
+
+app/
+  |about/
+    |page.tsx
+  |layout.tsx
+  |page.tsx
+
+Layout
+Usado para agrupar las páginas de una aplicación.El layout por defecto es el RootLayout (layout.tsx en la carpeta app)
+
+Layouts anidados
+Next identifica automaticamente el layout (layout.tsx) y la página (page.tsx) dentro de cada carpeta.
+
+Crear carpeta que no sea parte de la URL
+(nombreCarpeta)
+
+app/
+  |(general)/
+    |about/
+      |page.tsx
+    |users/
+        |list/
+          |page.tsx
+      |page.tsx
+    |layout.tsx <--- Layout anidado que comparten la carpeta about y users
+  |layout.tsx
+  |page.tsx
+
+Ruta donde se renderiza el about: /about
+Ruta donde se renderiza el user list: /users/list
+
+Next/Link
+- Componente de Next que se usa para la navegación, el cual hace un prefetch del contenido de la página, para mejorar el rendimiento.
+
+import Link from 'next/link';
+
+<Link href="/about">Ir a About</Link>
+
+
+usePathname (client side rendering)
+- Hook de Next que obtiene la ruta actual.
+
+import { usePathname } from 'next/navigation';
+
+const pathname = usePathname();
+
+redirect
+- Función de Next que redirecciona a una ruta especificada.
+
+import { redirect } from 'next/navigation';
+
+export default function Home() {
+  redirect('/about');
+}
+
+Image
+- Etiqueta nativa de Next que permite administrar de mejor manera la carga de imagenes.
+- Tiene un atributo priority que permite que la imagen se precargue en la página (true), o solo cuando se requiera/lazy loading (false).
+
+import Image from 'next/image';
 
 export default function About() {
   return (
+      <Image 
+        src="/vercel.svg"
+        alt="Vercel Logo"
+        width={72}
+        height={16}
+        priority={false}
+      />
+     );
+
+Data fetching
+
+*Route segment config
+Si quieres revalidar data que no usa Fetch, puedes usar el route segment config.
+
+export const revalidate = 60;
+
+fetchAPI
+- Debes declarar el componente que hará la petición a la API, como un componente async.
+- En la opción revalidate, puedes revalidar la data cada 60 segundos en este caso.
+
+const getUsers = async () => {
+  const data = await fetch('https://jsonplaceholder.typicode.com/users', {cache: 'force-cache', {next: {revalidate: 60}}});
+  const users = await data.json();
+  return users;
+}
+
+
+export default async function Users() {
+
+  const users = await getUsers();
+
+  return (
+      <>
+      <div>
+        <h1>Users</h1>
+        <ul>
+          {users.map((user) => (
+            <li key={user.id}>{user.name}</li>
+          ))}
+        </ul>
+      </div>
+      </>
+      )
+}
+
+Error page
+- Crear archivo error.tsx en el mismo nivel del page.tsx.
+- Este archivo es usado para manejar de forma decente el error, y mostrar un mensaje de error personalizado.
+- El archivo errr.tsx debe ser del lado del cliente ('use client')
+
+'use client'
+
+export default function Error({error, reset}:{error:Error, reset:() => void}) {
+
+  return (
     <div>
-      <h1>About</h1>
+      <h1>Something went wrong</h1>
+      <p>{error.message}</p>
+      <button onClick={() => reset()}>Try again</button>
     </div>
+  )
+
+}
+
+*Not found page
+- Crear archivo not-found.tsx, puedes crear uno globalen la raíz de las rutas,o local,en el mismo nivel del page.tsx. 
+- Cuando escribas una ruta que no existe, Next redirecciona al not-found.tsx.
+- También puedes mandar a llamar una función  notFound() que redirija al not-found.tsx.
+
+app/
+  |users/
+    |[id]/ 
+      |page.tsx
+  |layout.tsx
+  |not-found.tsx <--- Componente not found
+  |page.tsx
+
+export default function NotFound() {
+  return (
+    <>
+      <h1>Not found</h1>
+    </>
   )
 }
 
-Cambiar metadata de cada page
-- Crear una constante metadata y asignarle un valor a sus atributos
-- Si no encuentra metadata en la página actual, se utiliza la metadata por defecto(layout padre)
 
-  import tpe { Metadata } from 'next'
+import { notFound } from 'next/navigation';
 
-  const metadata:Metadata = {
-    title: 'About',
-    description: 'About description',
+export default function Users() {
+  return (
+    <>
+      <h1>Users</h1>
+      <button onClick={() => notFound()}>Redirigir a not found</button>
+    </>
+  )
+}
+
+
+
+Rutas dinámicas
+- Usadas para crear componentes que reciben parámetros dinámicos.
+- Estos argumentos se declaran entre llaves cuadradas.
+- El componente page.tsx en este caso, puede recibir los parámetros mediante los props.
+
+app/
+  |users/
+    |[id]/ <--- Parámetros dinamicos
+      |page.tsx
+  |layout.tsx
+  |page.tsx
+
+
+export default function User({ params }: { params: { id: string } }) {
+  
+  return (
+     <>
+      <h1>User {params.id}</h1>
+    </>
+  )
+}
+
+Static site generation (SSG)
+- Práctica usada para generar contenido estático de manera anticipada, y adelantarse a las peticiones del cliente, por ejemplo, en el caso de rutas dinámicas.
+- Para eso, debes crear una función en un server component de una ruta dinámica, con la siguiete sintaxis:
+
+export function generateStaticParams() {
+  //Retornas un arreglo de parámetros dinamicos
+  return [
+    { id: '1' },
+    { id: '2' },
+    { id: '3' },
+  ];
+}
+
+Server actions
+- Hay dos formas para especificar si quieres que un código se ejecute del lado del servidor.
+    - Si quieres que todo el archivo sea completamente ejecutado del lado del servidor, debes usar la directiva 'use server' en el principio del archivo.
+    - Si quieres que sea solo una función, debes usar la directiva 'use-server' en la primera línea de la función, de esta manera (solo se pueden mandar objetos al server, no funciones):
+        export const fetchUsers = async () => {
+          'use server'
+           ///- Resto del código
+            revalidatePath('/users'); //Ruta a recargar para actualizar la vista
+          return users;
+        }
+
+useOptimistic hook
+Hook parecido al useState, usado para realizar cambios "optimistas", o sea, actualizar rápidamente la UI, aunque el proceso de actualización sea asíncrono y tarde mucho del lado del servidor.
+
+import { useOptimistic } from 'react';
+
+const [isReady, toggleIsReady] = useOptimistic(
+    true,
+    (state,newIsReadyValue:boolean) => ({...state,isReady:newIsReadyValue})
+)
+
+const onToggleIsReady = async() => {
+  try{
+    //Actualización optimista
+    startTransition(() => {
+      toggleIsReady(!isReady)
+    })
+    //Server action async
+    await toggleIsReady(!isReady)
+  }catch(error){
+    //Actualización optimista
+    startTransition(() => {
+      toggleIsReady(!isReady)
+    })
   }
+}
 
-Layout
-  - Layout principal (RootLayout)
-  - Layouts anidados (Crear layout.tsx dentro de una carpeta, y todas las page dentro de esa carpeta renderizaran el layout)
-    - Para hacer esto, se puede crear una ruta de esta manera (general), entre parentésis, lo que hace que no sea parte de la ruta de la aplicación.
+Cookies
 
-Server components
-- Puedes hacer uso de async para la generación de componentes
-- Por defecto, todos los componentes son server components
-- No se puede hacer uso de lógica de hooks en server components
+Client side
+Libreria para manejar cookies del lado del cliente
+npm i cookies-next
+import {setCookie,getCookie} from 'cookies-next'
 
-Directivas
-'use client'
-'use server'
+setCookie('jwt','123', {maxAge: 60 * 60 * 24 * 30, path: '/'})
 
-Next/Link
-- Elementos usados para la navegación dentro de la aplicación
-- Al pasar el mouse sobre el link, hace un prefetch de la ruta especificada, emulando el comportamiento de una SPA, aunque los componentes sean renderizados del lado del servidor
 
-import Link from 'next/link'
+Server side
+import {cookies} from 'next/headers'
 
-<Link href="/about">About</Link>
+const cookies = cookies();
+const jwt = cookies.get('jwt');
+
+Auth
+npm i next-auth

@@ -1,0 +1,241 @@
+*Modificadores de acceso
+*Contexto estatico y dinamico
+*Genericos
+*Stream
+
+Java
+
+Variables
+
+Declaracion
+tipo + nombre + valor
+int myVar = 5
+String myVar = "Saul Alberto"
+var myVar = 12;
+*var hace inferencia del tipo de datos, a partir del tipo de la variable asignada (12, o sea int)
+*var solo puede ser usada dentro de un método	
+
+Tipos de datos
+
+Primitivos
+
+Enteros: byte,short,int,long
+Punto flotante: float,double
+Caracter: char
+Booleano: boolean
+
+Object (valor por default es null)
+String, Arreglos,Objetos de clases
+
+Constantes
+final + tipo + nombre + valor
+final int WEEK_DAYS = 7;
+
+Java
+Memoria stack
+Almacena las variables primitivas y locales (referencias hacia espacios de memoria en memoria Heap)
+Memoria heap
+Almacena los objetos y sus referencias son almacenadas en la memoria stack
+
+String
+Las cadenas son objetos (instancias de la clase String), y son inmutables.
+var cadena1 = "Saul";
+var cadena2 = new String("Alberto");
+
+Comparar contenido en cadenas (no referencia)
+cadena1.equals(cadena2)
+
+
+Switch mejorado (Puede retornar un valor)
+
+var age = switch(birthYear) {
+  case 1993 -> 31;
+  case 1994 -> 30;
+  case 1995 -> 29;
+  default -> 18
+}
+
+Arreglos
+
+Declaración de arreglos
+tipoDato + [] + nombreArreglo
+int [] newArr
+
+Inicializar el arreglo/Reservar espacio en memoria (En este ejemplo,se crea una variable que apunta a 5 celdas en la memoria)
+newArr = new int[5];
+
+Sintaxis simplificada de arreglos
+int [] numbers = {1000, 2000,3000, 4000};
+var numbers = new int[]{1000, 2000,3000, 4000};
+
+Matrices
+Crear matriz de 2 renglones y 3 columnas
+int [][] matriz = new int[2][3];
+var matriz = new int[2][3];
+
+Modificar valor de renglon 0, y columna 1
+matriz[0][1] = 100;
+
+Sintaxis simplificada de matrices
+var matriz = new int[]{{1,2,3}, {4,5,6}};
+
+Funcion
+
+retorno nombreFuncion ( parametros ) {}
+
+void sumar (num1, num2) {}
+
+Operador this
+Variable en memoria que se crea al momento de crear un objeto, y apunta al objeto que se esta ejecutando en el momento. (Solo se puede utilizar dentro de la clase)
+
+public class Aritmetica {
+  
+  int num1;
+  int num2;
+  
+  public Aritmetica(number1, number2){
+    this.num1 = number1;
+    this.num2 = number2;
+  }
+
+}
+
+Paquetes
+Coleccion de archivos y directorios que nos permiten organizar las clases, con nombres en minusculas.
+
+
+
+Sobreescritura de metodos
+La clase hija puede sobreescribir el método de la clase padre.
+*Se debe utilizar la misma firma del metodo del padre(public void en este caso)
+
+class Animal {
+  
+  public void dormir(){
+    sout("El animal promedio duerme 8 horas");
+  }
+
+}
+
+class Perro extends Animal {
+  
+  @Override
+  void dormir(){
+    sout("El perro duerme solo 5 horas");
+  }
+
+}
+
+Super
+Herramienta que nos sirve para acceder al comportamiento de un método de la clase padre.
+
+class Animal {
+  
+  public void dormir(){
+    sout("El animal promedio duerme 8 horas");
+  }
+
+}
+
+class Perro extends Animal {
+  
+  @Override
+  void dormir(){
+    sout("El perro duerme solo 5 horas");
+    super.dormir();
+  }
+
+}
+
+Clase Object
+Clase padre de todas las clases
+
+Metodos
+equals = Verifica igualdad de objetos
+toString = Nos retorna una cadena con la informacion de la clase por default(nombrePaquete.nombreClase@DireccionMemoria), puede personalizarse.
+hashCode = 
+
+Argumentos variables
+Herramienta que sirve para indicar que se recibiran varios elementos
+
+public void imprimirArgs(int... numeros){
+	for(var i=0;i<numeros.length;i++){
+		sout(numeros[i])
+	}	
+}
+
+Foreach
+
+int edades[] = {5,6,3,6,7,8};
+
+for(int edad:edades){
+	sout(edad)
+}
+
+Clases abstractas
+
+abstract class Animal {
+
+	public abstract void display();
+
+}
+
+class Perro extends Animal {
+	
+	public void display(){
+		sout("Soy un perro")
+	}
+}
+
+Interfaces
+
+public interface FlyBehavior {
+	
+	public void fly()	
+
+}
+
+class Duck implements FlyBehavior {
+
+	public void fly(){
+		sout("I can fly")
+	}
+	
+}
+
+Manejo de excepciones
+
+try{
+//Codigo a correr
+}catch(Exception e){ //La clase exception es la clase padre de todas las excepciones
+  Sout(e)//Detalles de la excepcion		
+}finally{
+ .... //Código que siempre se ejecuta	
+}
+
+Arrojar una excepcion
+public void sum(){
+	if(....){ //Validacion que puede arrojar una excepcion
+		throw new Exception("Exception cached")
+	}
+}
+
+Colecciones
+Representa un grupo de objetos
+
+Collection (List -> ArrayList, Set -> SortedSet)
+Map (HashMap)
+
+Listas
+
+List<String> items = new ArrayList<String>(); //ArrayList es una de las muchas clases que implementan la interface Lista; no hay necesidad de especificar la longitud de la lista, se pueden agregar elementos dinamicamente.
+items.add("Pelota");
+items.add("Juguete");
+items.add("Chancla");
+
+Funciones lambda
+Son funciones anonimas de un codigo muy compacto
+
+items.forEach( item -> {
+	Sout(item)
+})

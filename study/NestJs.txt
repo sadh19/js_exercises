@@ -1,0 +1,272 @@
+Nest 
+
+Instalar de forma global
+npm i -g @nestjs/cli
+
+Crear proyecto
+nest new <nombre_proyecto>
+
+Modulos
+Agrupan una funcionalidad especifica.
+
+CLI
+nest g mo <modulo>
+
+import { Module } from '@nestjs/common';
+
+@Module({
+  imports: [],
+  controllers: [],
+  providers: [],
+  exports: [],
+})
+export class AppModule {}
+
+Controladores
+Encargados de administrar peticiones a la API
+
+CLI
+nest g co <controlador>
+
+import { Controller, Get, Param } from '@nestjs/common';
+
+@Controller('app')
+export class AppController {
+
+  private GREETINGS = ['Hola', 'Mundo', 'Soy', 'Saul'];
+
+  @Get()
+  getInfo(){
+    return this.GREETINGS;
+  }
+
+  @Get(':id')
+  getGreetById(@Param('id') id: string){
+    return this.GREETINGS[+id]; // + para convertir el string a number
+  }
+
+}
+
+Servicios
+Alojan logica de negocio para que sea reutilizable usando la inyeccion de dependencias.
+*Todos los servicios son providers, no todos los providers son servicios.
+
+CLI
+nest g s <servicio>
+
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class GreeterService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+
+Inyeccion de dependencias
+En la inyeccion de dependencias, Nest crea una UNICA instancia de la dependencia.
+
+@Controller('app')
+export class AppController {
+  
+  constructor(private readonly greeterService: GreeterService) {}
+
+}
+
+Pipes
+Transforman los datos del request para asegurar un tipo.
+
+import { Get,Post, Body, ParseIntPipe } from '@nestjs/common';
+
+@Get(':id')
+getGreetById(@Param('id', ParseIntPipe) id: number){
+  return this.greeterService.getGreetById(id);
+}
+
+@Post()
+createGreet(@Body() greet: string){
+  return this.greeterService.createGreet(greet);
+}
+
+@Patch(':id')
+updateGreet(@Param('id') id: string, @Body() greet: string){
+  return this.greeterService.updateGreet(id, greet);
+}
+
+Exception filters
+Maneja los errores en mensajes de respuesta HTTP
+
+try {
+  Codigo que puede generar un error
+} catch () {
+  throw new NotFoundException("Not found error generic message"); //Returns 404 error code
+}
+
+Crear interface para crear un type
+
+greet.interface.ts
+
+export interface IGreeter {
+  id: number;
+  greet: string;
+}
+
+=================================================
+
+Librerías utilizadas para validaciones a nivel de parámetro, endpoint, controlador, y aplicación.
+npm i class-validator class-transformer
+
+Dtos
+Clases utilizadas para validación en la tranferencia de información de los endpoints
+
+user-create.dto.ts
+
+import {IsString} from 'class-validator';
+
+export class CreateUserDto {
+
+    @IsString({message:`The name must be a string`})
+    readonly name:string; <-- Se utiliza readonly para evitar la reasignación de la data
+
+    @IsString()
+    @MinLength(2 , {message:`The age must have at least 2 characters`})
+    readonly age:number;
+}
+
+@Post()
+@UsePipes(ValidationPipe) <-- Validaciones a nivel de endpoint
+createUser(@Body() createUserDto:CreateUserDto) {
+    //...lógica
+}
+
+=================================================
+
+Crear un resource completo (módulo, controlador, servicios, entities, etc.)
+
+nest g res nombreRecurso
+
+=================================================
+
+Importar un servicio dentro de otro servicio (diferentes módulos)
+
+- Módulo que necesita el importado
+
+@Module({
+  controllers:[UserController],
+  providers:[UserService]
+  imports:[CarsModule] <--- Se importa el módulo completo
+})
+export class UserModule {}
+
+
+- Módulo que exporta el servicio
+
+@Module({
+  controllers:[CarsController],
+  providers:[CarsService]
+  exports:[CarsService] <--- Se exporta el servicio
+})
+export class CarsModule {}
+
+- Servicio que usa el servicio importado
+
+@Injectable()
+export class UserService {
+
+  constructor(
+    private readonly carsService:CarsService
+  ){}
+
+}
+
+=================================================
+
+Usar axios para llamadas HTTP
+
+npm i axios
+
+import axios, {AxiosInstance} from 'axios';
+
+@Injectable()
+export class UserService {
+
+  private axios:AxiosInstance = axios;
+
+  constructor(
+    private readonly carsService:CarsService
+  ){}
+  
+  async loadUsers() {
+    const {data} = await this.axios.get('usersUrl');
+    return data;
+  }
+
+}
+
+=================================================
+
+Variables de entorno
+
+Archivo .env
+
+DB_USER=sadh19
+
+Instalar paquete para la configuración de las Variables
+
+npm i @nestjs/config
+
+app.module.ts
+
+import {Module} from '@nestjs/common';
+import {ConfigModule} from '@nestjs/config';
+
+@Module({
+  imports:[ConfigModule.forRoot()]
+})
+export class AppModule {}
+
+Usar las variables de entorno
+
+process.env.DB_USER
+
+Crear un archivo de configuración
+
+export const EnvConfiguration = () => ({
+  environment: process.env.NODE_ENV || 'env' 
+  db:process.env.DB_USER
+})
+
+Cargar el archivo en el AppModule
+
+@Module({
+  imports:[ConfigModule.forRoot({
+    load:[EnvConfiguration]
+  })]
+})
+export class AppModule {}
+
+Usar en un servicio
+
+Se debe importar el ConfigModulo en el módulo que lo necesita
+
+import {ConfigModule} from '@nestjs/config';
+
+@Module({
+  controllers:[UserController],
+  providers:[UserService]
+  imports:[ConfigModule,CarsModule] <--- Se importa el módulo completo
+})
+export class UserModule {}
+
+import {ConfigService} from '@nestjs/config';
+
+constructor(
+  private readonly configService:ConfigService
+){}
+
+loadUsers () {
+  ...lógica
+  configService.get<string>("db") <-- Aquí se obtiene los valores de las variables de entorno
+}
+
+

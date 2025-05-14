@@ -1,0 +1,512 @@
+Web
+SPA, SSR, SSG
+
+Movil
+Ionic, NativeScript
+
+Desktop
+Electron
+
+Instalar Angular CLI
+npm install -g @angular/cli
+
+Checar versión de Angular
+ng version
+
+Crear proyecto
+ng new <nombre> --no-standalone
+
+Iniciar proyecto
+ng serve -o
+
+Bloques fundamentales
+- Componentes
+- Rutas
+- Directivas (componentes, estructurales, atributos)
+- Servicios
+- Módulos
+
+
+Componente
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-counter',
+  templateUrl: './counter.component.html',
+  styleUrl: './counter.component.css'
+})
+export class CountComponent {
+
+  public count:number = 0;
+
+  public increment(){
+    this.count++;
+  }
+
+  public decrement(){
+    this.count--;
+  }
+
+}
+
+===================================================================================================
+
+Rutas
+import {Routes} from '@angular/router';
+
+export const routes:Routes = [
+{
+  path: '',
+  component: CountComponent,
+},
+{
+  path: 'dashboard',
+  loadComponent: () =>  import('./dashboard/dashboard.component') <-- Retorna una promesa, así que el dashboard.component debe declararse como: export default class DashboardComponent
+},
+{
+  path: 'users',
+  loadComponent: () =>  import('./users/users.component'), <-- Retorna una promesa, así que el dashboard.component debe declararse como: export default class DashboardComponent
+  children: [
+    {
+      path: 'details',
+      loadComponent: () =>  import('./details/details.component') <-- Rutas anidadas (users/:id)
+    },
+    {
+path: 'user/:id/:param', <-- Argumentos dinámicos
+      loadComponent: () =>  import('./user/user.component') <-- Rutas anidadas (users/:id)
+    },
+    {
+      path: '**',
+      redirectTo: 'details' <-- El comodin de las rutas hijas me redirige a la ruta details
+    }
+  ]
+
+},
+{
+path: 'countries',
+  loadChildren: () =>  import('./country/country.routes') <-- Se importa un modulo de rutas hijas, el cual debe tener un export por default
+}
+{
+  path: '**',
+  redirectTo: 'dashboard' <-- Comodin cuando no se encuentra una ruta
+}
+]
+
+Router outlet
+Se puede utilizar en cualquier componente para administrar la lógica de sus respectivas rutas hijas.
+
+users.component.html
+<router-outlet/>
+
+import { RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-users',
+  imports: [
+    RouterOutlet
+  ]
+  templateUrl: './users.component.html',
+})
+export class UsersComponent {}
+
+===================================================================================================
+
+HTML
+
+<p>Counter:{{count}}}</p>
+<p>Counter signal:{{counterSignal()}}}</p> //Las signal son funciones, así que se deben llamar como tal
+button (click)="increment()">Increment</button>
+button (click)="decrement()">Decrement</button>
+button (click)="addOneSignal()">Add one signal</button>
+button (click)="resetSignal()">Reset signal</button>
+
+Crear componente
+ng g c nombreComponente
+Este comando crea los archivos necesarios para crear un componente (HTML, CSS, TypeScript), y agrega el componente creado (.ts) al archivo (app.module.ts), en el arreglo de declaraciones.
+
+CSS
+*En Angular, el CSS está encapsulado, por lo cual solo aplica al componente que lo está utilizando.
+
+Interpolación
+- Es el mecanismo para sustituir una expresión por un valor de tipo string en la plantilla (template).
+- También es usado para evaluar una expresión.
+{{count}}
+
+Asociar un evento con un elemento HTML
+<button (click)="increment()">Increment</button>
+
+Asociar una propiedad con un elemento HTML
+<button [disabled]="count === 0">Decrement</button> 
+
+Getters/Setters
+Son métodos usados para obtener o establecer un valor de una propiedad, pero son tratados como propiedades.
+
+===================================================================================================
+
+Signals
+Implementación de actualización de estado de modo "quirurgico" para solo cambiar el valor de una propiedad de un componente, sin rerenderizar todo.
+
+import {signal} from '@angular/core';
+
+counterSignal = signal(0);
+
+addOneSignal() {
+  this.counterSignal.update(currentValue => currentValue + 1);
+}
+
+resetSignal() {
+  this.counterSignal.set(0);
+}
+
+//Signals computadas (readonly)
+//Cuando alguna de las signals dependencias (signals que intervienen en la computación) cambie, se recalcula la computación. 
+getCounterPlusTwo = computed(() => {
+  return this.counterSignal() + 2
+});
+
+===================================================================================================
+
+Directiva *ngIf
+<p *ngIf="isVisible">Me muestro condicionalmente</p>
+@if(isVisible) {
+  <p>Me muestro condicionalmente</p>
+}
+
+===================================================================================================
+
+Directiva *ngFor
+<li *ngFor="let hero of heroes; let i = index; let isFirst = first; let isLast = last; let isEven = even; let isOdd = odd" class="list-group-item">
+  <span>{{ i + 1 }}</span>
+  {{ hero }}
+</li>
+
+@for(hero of heroes;track hero.name) {
+  <li class="list-group-item">
+    {{ hero }}
+  </li>
+}
+
+<li *ngFor="let hero of heroes; let i = index; let isFirst = first; let isLast = last; let isEven = even; let isOdd = odd" class="list-group-item">
+  <span>{{ i + 1 }}</span>
+  {{ hero }}
+</li>
+
+===================================================================================================
+
+Directiva *ngIf-else/Componente ng-template
+Parecido al fragment en React, el ng-template es una etiqueta utilizado para directivas estructurales, funciona ocultando el contenido del elemento donde se aplica la directiva y almacenandolo dentroe del caché.
+Usa una referencia local (#noVisibleElement) para referenciar el elemento template.
+
+<p *ngIf="isVisible; else noVisibleElement">Soy un elemento visible</p>
+
+@if(isVisible) {
+  <p>Me muestro condicionalmente</p>
+}@else {
+  <p>Segunda condición</p>
+}
+
+<ng-template #noVisibleElement>
+  <p>Soy un elemento no visible</p>
+</ng-template>
+
+===================================================================================================
+
+Decorador Input
+Define una propiedad que puede ser enviada desde un componente padre a un componente hijo.
+@Input() myProperty:boolean;
+
+<parent-component>
+  <child-component [myProperty]="someProperty"></child-component>
+</parent-component>
+
+Función input signal (como los props de React)
+
+ParentComponent.ts
+export class ChildComponent {
+  name = signal<string>('Saul');
+}
+
+ParentComponent.html
+<child-component [name]="name()"></child-component>
+
+ChildComponent.ts
+
+import { input } from '@angular/core';
+
+export class ChildComponent {
+  name = input.required<string>()
+}
+
+===================================================================================================
+
+Función output signal
+Emitir data como eventos
+
+import {output} from '@angular/core';
+
+export class FirstComponent {
+  name = output<string>()
+
+  onUpdateName() {
+    //logica del handle
+    this.name.emit('Saul'); <-- Emite el evento
+  }
+}
+
+Obtener el evento desde un componente hijo
+
+ChildComponent.html
+<child-component (name)="onUpdateName($event)"></child-component>
+
+ChildComponent.ts
+
+export class ChildComponent {
+  
+  username = signal<string>()
+  
+  onUpdateName(name: string) {
+    this.username.update(name);
+  }
+}
+
+===================================================================================================
+
+ngClass
+Usado para añadir clases de manera condicional.
+<div [ngClass]="{'alert': myBooleanCondition, 'alert-success': mySecondBooleanCondition}"></div>
+
+===================================================================================================
+
+ngModel
+Hace uso del two-way data binding (Modifica HTML y archivo TS).
+
+1- Se debe importar la librería FormsModule y ponerla en los imports del módulo donde se vaya a hacer uso del ngModel.
+
+import { FormsModule } from '@angular/forms';
+
+2- Debes usar la propiedad [(ngModel)] en el elemento HTML, dentro de un formulario de esta manera.
+
+<form>
+  <input type="text" [(ngModel)]="character.name" name="name">
+</form>
+
+O si lo haces sin estar dentro de un formulario, de esta manera:
+<input type="text" [(ngModel)]="character.name" [ngModelOptions]="{standalone: true}">
+
+===================================================================================================
+
+RouterLink
+Directiva usada para redireccionar a una ruta.
+
+import { RouterLink, RouterLinkActive } from '@angular/router';
+
+@Component({
+  selector: 'app-counter',
+  imports: [RouterLink, RouterLinkActive],
+  templateUrl: './counter.component.html',
+  styleUrl: './counter.component.css'
+})
+export class CountComponent {
+
+  public count:number = 0;
+
+  public increment(){
+    this.count++;
+  }
+
+  public decrement(){
+    this.count--;
+  }
+
+}
+
+counter.component.html
+<nav>
+<ul>
+    <li>
+      <a routerLink="/" routerLinkActive="activeClassname" [routerLinkActiveOptions]="{exact: true}">Home</a>
+    </li>
+    <li>
+      <a [routerLink]="['/user', '19']" routerLinkActive="activeClassname" [routerLinkActiveOptions]="{exact: true}">Home</a> <--- Ruta dinámica
+    </li>
+    <li>
+      <a routerLink="/counter" routerLinkActive="activeClassname" [routerLinkActiveOptions]="{exact: true}">Counter</a>
+    </li>
+</ul>
+</nav>
+
+===================================================================================================
+
+Obtener parametros de la ruta dinámica
+
+import { ActivatedRoute } from '@angular/router';
+import { inject, toSignal } from '@angular/core';
+
+export default class UserComponent {
+  
+  query = inject(ActivatedRoute).params.subscribe(params => {;
+    console.log(params);
+  })
+
+  query = toSignal(inject(ActivatedRoute).params.pipe(map(params => params['id']))) <-- Convierte el observable en un signal
+  )
+
+}
+
+===================================================================================================
+
+Input text
+<input type="text" [value]="greet()" (change)="greet.set($event.target?.value ?? '')">
+
+Input text con referencias locales
+<input type="text" [value]="greet()" (change)="greet.set(myInput.value) #myInput">
+
+===================================================================================================
+
+Services
+Clases de TS que generan una sola instancia de una clase(Singleton), o sea, su proposito es centralizar la data que comparte ciertas caracteristicas de la aplicación.
+Injectable es un decorador que convierte una clase en un servicio
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FormService {
+  public name() {
+    //logica
+  }
+
+}
+
+//Usar el servicio en un componente
+
+export class ParentComponent {
+  public formService = inject(FormService)
+}
+
+<child-component (name)="formService.name"></child-component>
+
+===================================================================================================
+
+Efectos
+Operación que se ejecuta al menos una vez (similar al ngOnInit), pero si usa alguna señal, y esta cambia, el efecto se vuelve a ejecutar.
+
+import { effect } from '@angular/core';
+
+//Se ejecuta cuando el counter cambie
+counterEffect = effect((onCleanup) => {
+  console.log('Ejecutando efecto de la siguiente señal: ${counter()}');
+  onCleanup(() => {
+    console.log('Este se ejecutará cuando el componente se destruya');
+  })
+})
+
+===================================================================================================
+
+Environments
+Crear archivo de environments desde CLI (Crea 2 archivos: environments.ts y environments.development.ts), y modifica el archivo Angular.json para agregar el archivo de environments.
+ng g environments
+
+export const environment = {
+  dbName: 'pg'
+};
+
+Usar las variables de entorno
+
+import { environment } from './environments/environment';
+
+envs = environment;
+
+===================================================================================================
+
+Http client
+Libreria para hacer peticiones HTTP
+
+//Proveer la librería
+
+import { provideHttpClient, withFetch } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+  ...
+  provideHttpClient: (withFetch()) 
+}
+
+
+//Hacer uso de HTTP client
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+
+  private http = inject(HttpClient);
+
+  constructor() {
+    this.fetchUsers();
+  }
+
+  fechUsers():Observable<User[]> {
+    return this.http.get('https://jsonplaceholder.typicode.com/users');
+  }
+
+  fechUsers2():Observable<User[]> {
+    this.http.get('https://jsonplaceholder.typicode.com/users').subscribe((resp) => {
+      console.log(resp.data);
+  });
+  }
+  
+}
+
+===================================================================================================
+
+viewChild
+Sirve para referenciar un elemento de la vista
+
+<div #myDiv></div>
+
+import { viewChild, ElementRef } from '@angular/core';
+
+scrollDivRef = viewChild<ElementRef>('myDiv');
+
+===================================================================================================
+
+RxJS
+Libreria utilizada para programar de forma reactiva usando observables.
+
+Observable
+Es una versión avanzada  de una Promesa 
+- Puede emitir multiples valores en el tiempo
+- Permite que el consumidor se suscriba para recibir estos valores.
+- Puede ser cancelado
+
+import {Observable,tab} from "rxjs"
+
+fechUsers():Observable<User[]> {
+    return this.http.get('https://jsonplaceholder.typicode.com/users').pipe(tap(resp) => {
+      this._users.set(resp.user);
+    });
+}
+
+===================================================================================================
+
+Guards
+Es un tipo de middleware, previene acceso no autorizado a rutas
+
+export const MyGuard:CanMatchFn = (route:Route, segments:UrlSegment[]) => {
+
+	//Lógica que valida si el usuario tiene acceso a la vista, si si tiene, debe regresar true
+	
+	return false;
+}
+
+export const routes:Routes = [
+{
+  path: '',
+  component: CountComponent,
+  canMatch :[
+	MyGuard
+  ]	
+},
+]
+
