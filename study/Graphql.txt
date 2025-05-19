@@ -1,0 +1,183 @@
+Es un lenguaje de consulta
+Desarrollado por Facebook
+
+- Eficiencia
+    - Multiples consultas con una sola request
+    - Soporte para datos relacionales
+    - Previene overfetching y underfetching
+- Sistema de Tipos
+    - Describe la forma que se puede enviar/recibir los datos 
+    - Contrato entre cliente y servidor
+    - Validación por parte del servidor
+    - Seguridad adicional
+- Un único endpoint
+    - Desarrollo de nuevas funcionalidades sin romper la compatibilidad hacia atrás
+- Trabaja sobre cualquier columnas
+    - Base de datos existentes
+    - Base de código existente
+    - Se puede construir sobre otra API (REST)
+    
+El schema de Graphql está definido por:
+
+    - Los tipos y directivas que emite
+    - Los tipos de operación que admite:
+        - Query
+        - Mutation
+        - Subscription
+        
+Tipo raíz (obligatorio)
+
+type Query {
+
+}
+
+Validaciones internas
+- Todos los tipos deben tener nombres únicos (camelCase)
+- Todas las directivas deben tener nombres únicos (PascalCase)
+- Tipos y directivas no pueden comenzar con dos guiones bajos
+
+Escalares
+- Datos primitivos que almacenan un solo valor
+    - Int: Enteros
+    - Float: Numeros con decimales
+    - String: Cadenas de texto
+    - Boolean: Booleanos
+    - ID: Int o String
+    
+Objetos
+- Entidades con las que modelamos nuestros servicios
+- Todos los tipos deben tener campos
+
+type MyType {
+    propiedadUno:TypeUno
+    propiedadDos:TypeDos
+}
+
+Enum
+- Similar a los escalares
+- Útiles para trabajar con una lista de valores predefinidos
+- Para crear un enum dentro del schema, debemos usar enum en vez de type
+
+enum Cursos {
+    NODE
+    REACT
+    ANGULAR 
+}
+
+type Alumno {
+    nombre:String
+    edad:Int
+    materia:Cursos=NODE <== Con valor por defecto
+}
+
+
+Modificadores de tipos
+- Sirven para modificar el comportamiento cuando usamos un tipo
+- 2 tipos:
+    - !:Valor obligatorio (El campo no puede ser null)
+    - [String]: Lista de valores con un elemento o mas (En este caso, el arreglo puede traer valores nulos debido a que no tiene String!)
+    
+Ejemplos:
+
+type Alumno {
+    name:String!
+    cursos:[String]! <--- La lista no puede ser nula, pero sus valores pueden ser nulo o string 
+}
+
+type Alumno {
+    name:String!
+    cursos:[String!] <--- La lista puede ser nula, pero sus valores no pueden serlo. 
+}
+
+type Alumno {
+    name:String!
+    cursos:[String!]! <--- La lista y los valores no pueden ser nulos 
+}
+
+Interfaces
+- Definiciones abstractas de atributos comunes
+- Múy util para cuando queremos retornar objetos de diferentes tipos
+
+interface Perfil {
+    nombre:String!
+    email:String!
+    edad:Int!
+}
+
+type Alumno implements Perfil {
+    nombre:String!
+    email:String!
+    edad:Int!
+    curso:String!
+}
+
+Root types
+- Son puntos de entrada
+- Sirven para comunicar al cliente con el servidor a través de ellos.
+- 3 tipos de raíz:
+    - Query (Consulta/REST => GET)
+    - Mutation (Mutación/REST => POST/PATCH/PUT/DELETE)
+    - Observer (Subscripción => Información en tiempo real/WS)
+    
+
+Root type Query
+- Punto de entrada para realizar las consultas
+- Escrito en SDL (Specification and description language) para definir la consulta
+
+type Query {
+    listadoElementos:[String]
+    elemento(id:ID!):String
+}
+
+Tipo de raíz: Query
+Definiciones: listadoElementos y elemento
+Tipo de dato que retorna: Arreglo de String y String
+
+
+Root type Mutation
+- Punto de entrada para realizar las operaciones de modificación
+- Similar a una función
+
+type Mutation {
+    insertarElemento(nombre:String):String
+    borrarElemento(id:ID!):[String]
+    borrarTodo:[String]
+}
+
+Root type Subscription
+- Punto de entrada para obtener información en tiempo real 
+- Utiliza la conexión mediante Web Sockets para obtener cambios
+
+type Subscription {
+    nuevoElemento:String
+}
+
+Tipos de entrada (Input type)
+- Elementos que nos permiten pasar valores a Queries/Mutations
+- Se pueden pasar:
+    - Valores simples(Escalares)
+    - Objetos mas complejos
+- Se comportan como los argumentos ante cualquier operación
+
+input TagInput {
+    label:String!
+    description:String
+}
+
+type Tag {
+    id:ID!
+    label:String!
+    description:String
+}
+
+mutation {
+    newTag(tag:TagInput!):Tag
+}
+
+Comentarios
+- Graphql admite Markdown dentro del schema para comentarios
+- Comentarios una linea ("Mensaje")
+- Comentarios multilinea ("""
+                            Mensaje
+                         """)
+- Facilita la generación del SDL
