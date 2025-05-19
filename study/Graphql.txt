@@ -181,3 +181,128 @@ Comentarios
                             Mensaje
                          """)
 - Facilita la generación del SDL
+
+Merge de la misma instancia de un objeto
+- Cuando haces la misma petición n veces, el resultado se junta para evitar data repetida
+
+{
+    character(id:1) {
+        id
+        name
+    }
+    character(id:1) {
+        id
+        description
+    }
+    character(id:1) {
+        description
+    }
+    character(id:1) {
+        photo
+    }
+}
+
+Retorna:
+
+{
+    "character": {
+        "id:"1"
+        "name": "Walter White"
+        "description": "description...."
+        "photo": "https://...."
+    }
+}
+
+Alias
+- Usados para evitar conflictos entre instancias del mismo objeto
+
+{
+    walter:character(id:"1") {
+        id
+        name
+        description
+        photo
+    }
+    jesse:character(id:"2") {
+        id
+        name
+        description
+        photo
+    }
+}
+
+Fragments
+- Elementos que permiten simplificar las consultas definiendo en un bloque una colección de datos a recuperar, sin necesidad de repetirlos.
+
+fragment personajesFragment on Character {
+    id
+    name
+    description
+    photo
+}
+
+{
+    walter:character(id:"1") {
+        ...personajesFragment
+    }
+    jesse:character(id:"2") {
+        ...personajesFragment
+    }
+}
+
+Query variables
+- La forma de pasar variables a la consulta
+
+{
+    "walter": "1"
+}
+
+query loadData($walter:ID!){
+    walter:character(id:$walter) {
+        id
+        name
+        description
+        photo
+    }
+    jesse:character(id:"2") {
+        id
+        name
+        description
+        photo
+    }
+}
+
+Mutations
+
+mutation {
+    addVote(character:"1") {
+        id
+        character
+        createdAt
+    }
+}
+
+Directivas skip/include
+- Nos permite poder deshabilitar o incluir atributos de objetos
+
+{
+    "mostrarActor" : true
+}
+
+query getCharacters($mostrarActor:Boolean!){
+   characters {
+        id
+        name @skip(if:$mostrarActor)
+        description @include(if:$mostrarActor)
+        photo
+    }
+}
+
+Subscription
+subscription {
+    newVote {
+        id
+        name
+        votes
+    }
+}
