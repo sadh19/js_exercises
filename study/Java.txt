@@ -1,7 +1,11 @@
-*Modificadores de acceso
-*Contexto estatico y dinamico
-*Genericos
-*Stream
+*SQL
+*OAuth
+*JWT
+*Java String pool
+*Clases wrapper
+*Maven
+*Gradle
+
 
 Java
 
@@ -239,3 +243,326 @@ Son funciones anonimas de un codigo muy compacto
 items.forEach( item -> {
 	Sout(item)
 })
+
+===
+
+Lenguaje interpretado
+Es un tipo de lenguaje de programación en el que el código fuente no se compila completamente a código máquina antes de ejecutarse, sino que se ejecuta línea por línea mediante un intérprete.
+
+Lenguaje compilado
+Es un lenguaje de programación en el que el código fuente que escribes debe ser traducido completamente a código máquina (también llamado código nativo) antes de ejecutarse.
+Esta traducción se realiza mediante un programa llamado compilador.
+
+=================================================
+
+Programacion declarativa (SQL, HTML, React)
+Es un paradigma de programación donde le dices qué quieres lograr, no cómo hacerlo paso a paso. Es decir, describes el resultado deseado, y no los pasos detallados para obtenerlo.
+- Menos código y más legibilidad
+- El orden de ejecución lo maneja el sistema
+- Mas abstracta
+- Facilita la programación reactiva y funcional
+
+Programacion imperativa
+En este estilo, le dices a la computadora exactamente cómo debe hacer algo, paso a paso, usando instrucciones secuenciales, estructuras de control (como if, for, while) y cambios de estado (variables que se modifican).
+- El programa es una secuencia de instrucciones.
+- Controlas el flujo de ejecución tú mismo.
+
+=================================================
+
+Java
+Es un lenguaje de programación orientado a objetos, robusto, seguro y multiplataforma
+
+- Multiplataforma(Write once,run anywhere)
+El código Java se compila a bytecode, que se ejecuta en la Java Virtual Machine (JVM). Esto significa que el mismo programa puede ejecutarse en Windows, macOS o Linux sin cambios.
+
+- Orientado a objetos(Encapsulamiento,herencia,polimorfismo, abstracción)
+
+- Multithreading
+
+=================================================
+
+JVM (Java Virtual Machine)
+Es una máquina virtual que permite ejecutar programas Java.Traduce el bytecode compilado (.class) en instrucciones que el SO pueda entender.
+Ciclo de vida típico (1.- Escribes código Java, 2.- Compilas con javac y generas el bytecode, 3.- La JVM ejecuta ese bytecode)
+
+=================================================
+
+Características JVM
+
+Multiplataforma: el bytecode es independiente del sistema operativo.
+Gestión de memoria automática: con Garbage Collector.
+Seguridad: verifica el bytecode antes de ejecutarlo.
+Multithreading: soporte integrado y eficiente.
+
+=================================================
+
+Java JIT (Just In Time)
+Es una técnica de compilación en tiempo de ejecución que permite mejorar el rendimiento de las aplicaciones Java. 
+Forma parte de la JVM (Java Virtual Machine) y su función principal es convertir el bytecode en código máquina nativo mientras el programa se está ejecutando.
+
+=================================================
+
+Uso de memoria
+Java divide la memoria en zonas dentro de la JVM.
+
+Las dos mas importantes son:
+
+1.- Heap
+- Donde se almacenan todos los objetos creados con new.
+- Compartida por todos los hilos.
+- Administrada por el garbage collector.
+- Las variables pueden seguir viviendo mientras tengan alguna referencia.
+
+2.- Stack
+- Almacena variables locales, parámetros de métodos y llamadas de pilas.
+- Cada hilo tiene su propio stack.
+- Cada vez que se invoca un método, se crea un "stack frame" (un bloque de memoria) para ese método. Cuando el método termina, ese stack frame se elimina automáticamente.
+- Su tiempo de vida es corto (duración del método)
+- Su gestión es automática (no GC)
+ 
+=================================================
+
+Garbage collector
+Es un componente automático de la JVM que se encarga de gestionar la memoria liberando objetos que ya no se usan,busca y elimina objetos en el heap que ya no tienen referencias activas, es decir, que no pueden ser accedidos por ningún hilo o código en ejecución.
+
+=================================================
+
+SoftReference
+Es una referencia suave a un objeto en Java.
+- Permite que el objeto sea recolectado por el GC si la JVM requiere memoria, pero si no la requiere, el objeto referenciado se mantiene vivo.
+- Se elimina cuando la JVM se queda sin memoria, para liberar espacio y evitar OutOfMemoryError.
+
+WeakReference
+Es una referencia débil a un objeto.
+- Si un objeto solo está referenciado por referencias débiles, el GC lo elimina en la siguiente pasada sin esperar a que falte memoria.
+
+=================================================
+
+Contexto estático
+Se refiere a cualquier lugar del código donde solo se puede acceder a miembros static (estáticos), porque no existe una instancia (objeto) de la clase desde la cual trabajar.
+
+Contexto dinámico
+Se refiere a cualquier parte del código donde se tiene acceso a una instancia de una clase, es decir, donde se puede usar this para referirse a atributos y métodos no estáticos.
+Este contexto existe solo cuando se ha creado un objeto de la clase. Por eso se dice que es dinámico: depende de una instancia en tiempo de ejecución.
+
+=================================================
+
+Concurrencia
+Gestiona múltiples tareas que avanzan de manera independiente pero no necesariamente al mismo tiempo.
+
+Paralelismo
+Es la capacidad de un programa para ejecutar varias tareas al mismo tiempo.
+
+=================================================
+
+Serialización
+Es el proceso de convertir un objeto en una secuencia de bytes para poder:
+- Guardarlo en un archivo o base de datos
+- Enviarlo a través de una red
+- Persistir su estado
+
+=================================================
+
+Streams
+Es una abstracción que representa una secuencia de elementos sobre la que se pueden realizar operaciones funcionales como map, filter, reduce, entre otras.
+Es una manera moderna y elegante de recorrer, transformar y filtrar colecciones de datos.
+No modifica la fuente de datos original (inmutabilidad)
+
+Operaciones intermedias (devuelven un nuevo stream)
+- filter, map, sorted, distinct
+
+Operaciones finales (terminan el stream)
+- forEach,collect,count,anyMatch,allMatch,noneMatch
+
+=================================================
+
+Referencias a métodos (Method references)
+Son una forma abreviada de escribir expresiones lambda que llaman a un método ya existente.
+
+public static int cuadrado(int x) {
+  return x * x;
+}
+
+List<Integer> numeros = List.of(1, 2, 3);
+
+numeros.stream()
+  .map(Demo::cuadrado) <--- en vez de: n -> Demo.cuadrado(n)
+  .forEach(System.out::println);
+
+=================================================
+
+Tipos de Modificadores
+
+Acceso 
+public: Accesibles desde cualquier lugar
+private: Accesible solo desde la misma clase
+protected: Accesible desde el mismo paquete
+default: Accesible desde la clase y el mismo paquete, pero no en subclases
+
+No acceso
+static: Pertenece a la clase, no a la instancia, usado para atributos y métodos compartidos.
+final: Atributos(no puede cambiar), método (no puede ser sobreescrito), clase (no puede ser heredada)
+abstract: Método (No tiene implementación), clase(no puede ser instanciada, y debe tener algún atributo o método abstracto)
+synchronized: Asegura que un método solo sea ejecutado por un hilo a la vez(concurrencia).
+transient: Excluye un atributo de la serialización.
+volatile: Indica que un atributo puede ser modificado por múltiples hilos y debe leerse directamente desde la memoria principal.
+
+=================================================
+
+This 
+Variable en memoria que se crea al momento de crear un objeto, y apunta al objeto que se esta ejecutando en el momento. (Solo se puede utilizar dentro de la clase)
+
+=================================================
+
+Constructor
+Es un método especial que se utiliza para crear e inicializar objetos de una clase. Se llama automáticamente cuando se instancia un objeto con new.
+Se puede sobrecargar
+
+=================================================
+
+Interface
+Es un tipo especial que define un contrato que las clases pueden implementar. Sirve para establecer qué debe hacer una clase, sin decir cómo lo hace.
+
+public interface Animal {
+    void display();
+}
+
+Interface de marcador (marker interface)
+Es una interface vacía, sin métodos ni atributos, que se usa para marcar o etiquetar una clase con una propiedad especial que puede ser reconocida en tiempo de ejecución por la JVM o por otras APIs.
+Por ejemplo, la interface Serializable.
+
+=================================================
+
+Clase abstracta
+Es una clase que no puede ser instanciada directamente,se utiliza cuando quieres definir un comportamiento común, pero dejar ciertos detalles para que los implementen las clases hijas.
+Si se hereda, la clase hija debe implementar lo abstracto.
+
+public abstract class Animal {
+    public abstract void display();
+}
+
+=================================================
+
+Array
+Is a data structure that is used to store a fixed-size sequence of elements of the same type.
+Arrays in Java are created in heap memory.
+The index of an array signifies the distance from the start of the array.
+
+int[] arr = new int[5]; 
+
+Copying arrays methods
+
+clone (Shallow copy)
+int[] arr = {1, 2, 3, 5, 0};
+int[] tempArr = arr.clone(); // Creates a new array with copied values
+
+arraycopy (Deep copy)
+int[] arr = {1, 2, 7, 9, 8};
+int[] tempArr = new int[arr.length];
+System.arraycopy(arr, 0, tempArr, 0, arr.length);
+
+=================================================
+
+Collection
+Es una interfaz raíz que representa un grupo de objetos, también llamados elementos, y forma parte del framework de colecciones de Java.
+
+Jerarquía
+Collection
+  - List (ArrayList,LinkedList)
+  - Set (HashSet,TreeSet)
+  - Queue (LinkedList,PriorityQueue)
+  
+Métodos clave de Collection
+
+| Método               | Descripción                           |
+| -------------------- | ------------------------------------- |
+| add(E e)             | Agrega un elemento                    |
+| remove(Object o)     | Elimina un elemento                   |
+| clear()              | Elimina todos los elementos           |
+| contains(Object o)   | Verifica si un elemento está presente |
+| size()               | Número de elementos                   |
+| isEmpty()            | Verifica si está vacía                |
+| iterator()           | Retorna un iterador para recorrer     |
+
+=================================================
+
+Map
+La interfaz Map<K, V> representa una estructura de datos que almacena pares clave-valor. Cada clave es única, y cada una se asocia a un solo valor.
+Es una parte fundamental del Java Collections Framework, aunque no extiende la interfaz Collection, porque su estructura es distinta.
+
+Map<String, Integer> edades = new HashMap<>();
+edades.put("Ana", 25);
+edades.put("Luis", 30);
+
+Implementaciones principales
+
+| Implementación  | Características principales                          |
+| --------------- | ---------------------------------------------------- |
+|  HashMap        | No ordena, permite `null` clave/valor, rápida        |
+|  LinkedHashMap  | Mantiene orden de inserción                          |
+|  TreeMap        | Ordenada por clave (usa `Comparable` o `Comparator`) |
+|  Hashtable      | Sin `null`, sincronizada (obsoleta para uso moderno) |
+
+Métodos clave
+
+| Método                      | Descripción                                    |
+| --------------------------- | ---------------------------------------------- |
+|  put(K clave, V valor)      | Inserta o reemplaza una entrada                |
+|  get(Object clave)          | Devuelve el valor asociado a la clave          |
+|  containsKey(Object clave)  | Verifica si existe una clave                   |
+|  remove(Object clave)       | Elimina la entrada con esa clave               |
+|  keySet()                   | Devuelve un `Set` con todas las claves         |
+|  values()                   | Devuelve una `Collection` de todos los valores |
+|  entrySet()                 | Devuelve un `Set<Map.Entry<K,V>>`              |
+
+=================================================
+
+Spring
+Es un framework de desarrollo que ofrece una infraestructura completa para construir aplicaciones Java.
+
+Características
+- Modular
+- Ligera
+- Escalable
+- Mantenible
+
+Módulos principales
+
+| Módulo                     | Descripción                                                         |
+| -------------------------- | ------------------------------------------------------------------- |
+|   Core / Beans / Context   | Soporte para Inversión de Control (IoC) e Inyección de Dependencias |
+|   Spring AOP               | Programación orientada a aspectos (Aspect-Oriented Programming)     |
+|   Spring Web               | Soporte para aplicaciones web (Servlets, REST, etc.)                |
+|   Spring MVC               | Framework para construir aplicaciones web MVC                       |
+|   Spring Data              | Acceso y persistencia de datos (JPA, JDBC, MongoDB, etc.)           |
+|   Spring Security          | Autenticación, autorización y protección contra ataques comunes     |
+|   Spring Boot              | Simplifica la configuración y arranque de proyectos Spring          |
+|   Spring Test              | Soporte para pruebas con JUnit/TestNG                               |
+
+
+=================================================
+
+Spring Boot
+Es una extensión de Spring Framework que te permite crear aplicaciones listas para producción con poca configuración. 
+
+Incluye:
+- Servidor embebido (Tomcat, Jetty)
+- Dependencias preconfiguradas (starter dependencies)
+- Configuración automática (auto-configuration)
+
+=================================================
+
+Bean
+Es un componente Java que se registra en el contenedor de Spring para ser usado en tu aplicación. Puede ser cualquier clase que Spring reconozca y gestione como parte de su contexto de aplicación.
+Los beans representan servicios, repositorios, controladores, etc.
+
+=================================================
+
+Spring container
+Es el núcleo del Spring Framework. Es el componente encargado de crear, configurar y gestionar los objetos (beans) de tu aplicación durante su ciclo de vida.
+
+=================================================
+
+Maven
+
+
