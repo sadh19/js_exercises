@@ -1,0 +1,307 @@
+Es una herramienta CI/CD open-source escrita en Java
+
+Requerimientos:
+Instalar docker y docker compose
+
+Jenkins job
+Tareas ejecutables que son supervisadas y controladas por Jenkins
+
+Arquitectura Jenkins (Maestro-esclavo)
+
+Maestro (Jenkins)
+- Encargado de programar el build job
+- Envía la compilación al esclavo para que se haga efectiva la ejecución del job
+- Supervisa el trabajo del esclavo y registrar los resultado del build
+
+Esclavos (Jenkins slave)
+Son máquinas programadas para construir los proyectos que el maestro le requiere
+
+- Jenkins ejecuta programas separados, que son llamados "agentes esclavos" dentro de los esclavos
+- Cuando el maestro registra los esclavos, empieza a enviar y elegir las tareas para cada esclavo
+
+Jenkins executor
+Es una secuencia separada de compilaciones que se ejecutarán en un node en paralelo
+Un node puede tener uno o mas ejecutores
+
+Iniciar contenedor de Jenkins
+- Nos movemos a la ruta raíz
+- docker-compose start
+
+Detener contenedor de Jenkins
+- Nos movemos a la ruta raíz
+- docker-compose stop
+
+Eliminar contenedor de Jenkins
+- Nos movemos a la ruta raíz
+- docker-compose down 
+
+Volver a crear contenedor de Jenkins
+- Nos movemos a la ruta raíz
+- docker-compose up -d
+
+Reiniciar contenedor de Jenkins
+- Nos movemos a la ruta raíz
+- docker-compose restart
+
+Ver logs contenedor de Jenkins
+- Nos movemos a la ruta raíz
+- docker-compose logs -f 
+
+Agregar variable de entorno en job
+AHORA=$(date + "%T")
+
+Copiar archivos externos dentro del contenedor
+docker cp rutaArchivoExterno nombreContenedor:rutaDentroDelContenedor
+
+Tipos de parametros en Jenkins
+String, de elección, booleano
+
+Pasar parámetros a los jobs de Jenkins
+Hay 4 formas
+- Declarar variables como en linux (export): Son volátiles
+- Declarar variables tipo shell ($nombre): Se declaran antes de llamar al script
+- Declarar variables inline en el llamado del script (run.sh $nombre)
+- Declarar las variables desde Jenkins(Esta ejecución debe parametrizarse)
+
+Comandos Jenkins
+#!/bin/bash
+echo "Ejemplo"
+
+Instalar plugin Github
+Administrar Jenkins -> Administrar plugins -> Github Branch Source
+
+Plugin Node
+NodeJS
+
+Plugin Maven
+Maven Integration Plugin
+
+Plugin Job DSL
+Job DSL
+
+Plugin pipelines
+Pipeline
+
+Agregar  Maven a Jenkins
+Administrar Jenkins -> Global Tool Configuration -> Maven
+
+Agregar Node a Jenkins
+Administrar Jenkins -> Global Tool Configuration -> NodeJS 
+
+Agregar repo a Jenkins
+En el job, en la parte de Configurar el origen del código fuente
+Git -> Pegar url
+Credentials -> Si se ocupa
+Branches to build -> Escribir las ramas
+
+Correr proyecto Node en Jenkins
+En los comandos, poner:
+npm install
+
+y en Jenkins, poner 
+Provide Node % npm bin/folder y seleccionar el plugin de node
+
+Jenkins job DSL
+El plugin Jenkins job DSL es utilizado para definir y construir jobs en una forma programable con los archivos de código
+Se escriben en Groovy Base Scrips
+  - Simplifican la manera de administrar los jobs
+  
+Para utilizar el plugin DSL, se debe crear un seed job
+
+Seed job
+Es un job de Jenkins que ejecuta un código DSL y por medio de ese código,se genera un nuevo job con los requerimientos establecidos
+
+- Es tipo proyecto de estilo libre
+- Ejecutar -> Process Job DSLs
+
+Wrappers
+Su uso es para agregar acciones previas o posteriores al job
+
+Triggers
+Programar la execución de algo espefico cada cierto tiempo
+
+Steps
+Etapas por las cuales el job debe pasar
+
+Publishers
+Se utilizan para archivar artifact, resultados de pruebas unitarias, etc.
+Podemos configurar las notificaciones
+
+job('ejemplo-job-DSL') {
+  description('Job description')
+  scm {
+    git('https://github.com/sadh19/react-labs.git', 'main') { node ->
+      node / gitConfigName('sahd19')
+      node / gitConfigEmail('saulalberto19@gmail.com')
+    }
+  }
+  parameters {
+    stringParam('nombre', defaultValue = 'Saul', description = 'Parametro de cadena')
+    choiceParam('planeta', ['Mercurio', 'Tierra', 'Marte'], description = 'Parametro de cadena')
+    booleanParam('isPerson', false)
+  }
+  triggers {
+    cron('H/7 * * * *') <-- chron que se ejecuta cada 7 minutos (El job se ejecuta cada 7 minutos)
+    scm('H/7 * * * *') <-- chron que se ejecuta cada 7 minutos (Cada 7 minutos checa en git si hubo cambios, si hubo, se recontruye el job)
+  }
+  wrappers {
+    nodejs('nodejs')
+  }
+  steps{
+    shell("bash myScript.sh")
+    shell("npm install")
+  }
+  publishers {
+    mailer('saulalberto19@gmail.com', true, true) <-- Notificar sobre los builds mediante correo
+    slackNotifier {
+      ...muchos campos
+    }
+  }
+}
+
+Crear un archivo job DSL externo
+- Crear un archivo nombreArchivo.Groovy en el proyecto (de preferencia en la raiz)
+- Pegar la configuración del job de arriba
+- Subir el cambio
+- En ejecutar, buscar Look on the FileSystem y poner la ruta del archivo
+./nombreArchivo.groovy
+
+Errores al correr job-seed
+Si sale un error: Script not yet approved for use, debes ir a:
+- Administrar Jenkins -> In-process script aproval -> Approve
+
+Pipeline
+Los pipelines de Jenkins nos da la capacidad de escribir los build steps en forma de código
+- Build
+- Test
+- Deploy
+
+En que se diferencia un pipeline de un job DSL
+- Job DSL crea n numeros de jobs, y el pipeline es un tipo de job que se puede encargar del ciclo completo de Build-Test-Deploy de un proyecto
+- Se puede crear DSL para crear nuevos pipeline jobs
+- Se puede escribir mediante Groovy(Scripted pipeline) o Jenkins DSL(Declarative pipeline)
+
+Etapas pipeline
+- Build
+- Test
+- Deploy
+
+Jenkins file (Declarative pipeline)
+Es un archivo en forma de código, que contiene el flujo completo del proceso y puede ser manejado con control de versión (CSM/GIT)
+
+pipeline {
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        echo 'Build application'
+      }
+    }
+    stage('Test') {
+      steps {
+        echo 'Testing application'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo 'Deploying application'
+      }
+    }
+  }
+}
+
+- Pipeline
+Es el bloque que define todo el contenido, el proceso entero de las etapas de un Jenkins file
+
+- Agent
+Se encarga de indicarle a Jenkins que asigne un ejecutor a las compilaciones y un espacio de trabajo para el Pipeline
+  - Any
+  Referido a ejecutar el pipeline o la etapa determinada en cualquier agent disponible
+
+- Node
+Es una máquina que ejecuta el flujo de trabajo completo del Pipeline
+
+Crear nuevo pipeline
+Nueva tarea -> Pipeline
+
+Tienes 2 opciones:
+- Pasarle el código del pipeline
+- Pasar la ruta donde se encuentra el archivo dentro del proyecto
+
+Etapas paralelas y secuenciales
+
+pipeline {
+  agent any
+  stages {
+    stage('Secuencial') {
+      stages {
+        stage('Secuencial 1') {
+          steps {
+            echo "Secuencial 1"
+          }
+        }
+        stage('Secuencial 2') {
+          steps {
+            echo "Secuencial 2"
+          }          
+        }
+        stage('Paralelo dentro del secuencial') {
+           parallel {
+            stage('Paralelo 1') {
+              steps {
+                echo "Paralelo en secuencial: Parte 1"
+              }
+            }
+            stage('Paralelo 2') {
+              steps {
+                echo "Paralelo en secuencial: Parte 2"
+              }
+            }
+          }          
+        }
+      }
+    }
+    
+  }
+}
+
+Retry
+Sirve para definir el numero de reintentos de un step,stage o el pipeline completo
+retry(3)
+
+Timeout
+Sirve para determinar un tiempo limite de ejecución (Si el step interno tarda mas del timeout, se aborta el pipeline)
+timeout(time:3, unit:'MINUTES')
+
+Variables de entorno
+Se definen en la consola de Jenkins, y para hacer uso, es:
+
+environment {
+  CRED_USUARIO = credentials('USUARIO1')
+}
+steps {
+  echo CRED_USUARIO_USR
+  echo CRED_USUARIO_PSW
+}
+
+Paramétros
+Se deben declarar después del agent
+
+Inputs 
+Se puede detener el flujo del pipeline, para pedir datos al usuario
+
+pipeline {
+  agent any
+  parameters {
+    string(name:'PERSONA', defaultValue:'Saul', description:'Persona name')
+    choice(name:'Planetas', choices:['Mercurio', 'Tierra', 'Marte'], description = 'Parametro de cadena')
+    booleanParam(name:'IS_PERSON', defaultValue:false)
+  }
+  stages {
+    stage('First stage') {
+      steps {
+        echo "Hola, como estas ${params.PERSONA}"
+      }
+    }
+  }
+}

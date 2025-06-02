@@ -1,0 +1,281 @@
+Docker desktop ubuntu
+systemctl --user start docker-desktop
+systemctl --user status docker-desktop
+systemctl --user restart docker-desktop
+
+Imagen
+Archivo construido por capas que trae todo lo necesario para ejecutarse.
+Es como una fotografia de la version de cada aplicacion/tecnologia.
+
+Docker daemon
+Servicio en segundo plano que se ejecuta en el host que administra los contenedores
+
+Contenedor
+Es una instancia de una imagen corriendo en un ambiente aislado
+
+Volumen
+Sirve para poder persistir la data que se genera dentro de un contenedor.
+Existen 3 tipos:
+- Bind volumes
+- Named volumes
+- Anonymous volumes 
+
+-d (detached)
+Significa que el contenedor correra desenlazado de la consola
+
+-p (publish)
+Significa que el contenedor estara publicado, usando un puerto de mi equipo y un puerto del contenedor.
+
+3306:3306
+El puerto antes de los dos puntos corresponde a mi puerto local, y el otro puerto corresponde al del contenedor 
+
+Correr comandos bash (linux)
+docker container run \
+-e MARIADB_RANDOM_ROOT_PASSWORD=yes \
+-dp 3306:3306\
+mariadb:jammy
+
+Correr comandos powershell (windows)
+docker container run `
+-e MARIADB_RANDOM_ROOT_PASSWORD=yes `
+-dp 3306:3306 `
+mariadb:jammy `
+
+
+Crear contenedor
+docker container run hello-world
+
+Listar contenedores activos
+docker container ls
+
+Listar todos los contenedores
+docker container ls -a
+
+Remover contenedor (Puede usar nombre, id, o shortcut del id (primeros 3 digitos))
+*Retorna el id del contenedor
+docker container rm 9b1kjksdjf
+
+Remover todos los contenedores detenidos
+docker container prune
+
+Detener contenedor
+docker container stop 9b1kjksdjf
+
+Iniciar contenedor
+docker container start 9b1kjksdjf
+
+Listar imagenes
+docker image ls
+
+Remover imagen
+docker image rm nombreImagen/idImagen
+
+Descargar imagen (Docker hub)
+docker pull postgress
+
+Correr postgress
+docker run --name dbName -dp 5432:5432 -e POSTGRES_PASSWORD=dbPassword postgres:latest
+
+dbName=Nombre de la DB
+-d=detached
+p=port
+5432:5432= El puerto a exponer de mi equipo, vs el puerto a exponer del contenedor
+-e=Variables de entorno
+:latest=Nombre del tag (dockerhub)
+
+Logs del contenedor
+docker container logs idContenedor
+
+Logs del contenedor en tiempo real
+docker container logs -f idContenedor
+docker container logs --follow idContenedor
+
+Crear volumen
+docker volume create volumeName
+
+Listar volumenes
+docker volume ls
+
+Inspeccionar volumen
+docker volume inspect volumeName
+
+Remover volumenes no usados
+docker volume prune
+
+Remover volumen
+docker volume rm
+
+Asignar volumen a un contenedor
+docker container run `
+-dp 3306:3306 `
+--name worlddb
+-e MARIADB_RANDOM_ROOT_PASSWORD=yes `
+--env MARIADB_USER=example-user `
+--env MARIADB_PASSWORD=user-password `
+--volume worlddb:/var/lib/mysql `
+mariadb:jammy `
+
+--volume/-v = Asignar el volumen
+worlddb = Nombre o ruta del volumen en local
+/var/lib/mysql = Ruta donde el contenedor guarda su info
+
+Listar todas las redes
+docker network ls
+
+Crear red
+docker network create networkName
+
+Conectar contenedor/contenedores a una red
+docker network connect networkName idContainer1 idContainer2 
+
+Inspeccionar red
+docker network inspect networkName
+
+Asigar red desde creacion del contenedor
+docker container run `
+-e MARIADB_RANDOM_ROOT_PASSWORD=yes `
+-dp 3306:3306 `
+--network networkName `
+mariadb:jammy `
+
+Bind volumes
+Nos tenemos que  ubicar en la carpeta de un proyecto (en este caso, un proyecto de node)
+docker container run `
+--name nest-app `
+-w /app `
+-p 3306:3306 `
+-v "$(pwd)":/app `
+node:16-alpine3.16 `
+sh -c "npm install && npm run dev"
+
+-w /app= Working directory, es como un cd dentro del contenedor
+-v "$(pwd)":/app = Se pone la ruta actual del directorio (pwd), y se enlaza con la ruta /app, dentro del contenedor
+sh -c "npm install && npm run dev" = Se corren los siguientes comandos, apenas acabe el montaje del contenedor
+
+Terminal interactiva
+Sirve para poder correr comandos/hacer ediciones de archivos en el contenedor
+docker exec -it idContenedor /bin/sh
+
+docker compose
+Crear archivo yml con nombre docker-compose.yml
+
+version: '3'
+
+	services:
+		db:
+			container_name: postgres_db
+			image: postgres:15.1
+			volumes:
+				- postgres-db:var/lib/postgresql/data //De esta forma puedes asignarle un volumen para que guarde los cambios que se produzcan en el contenedor
+				- ./postgressFolder:var/lib/postgresql/data //De esta otra forma, puedes asignarle un path para que dentro de esa ruta guarde los cambios del contenedor
+			environment:
+				- POSTGRES_PASSWORD=123456 //Puede ser declarado así
+				POSTGRES_PASSWORD:123456  //O así
+			command: ['--auth'] //Aquí se listan los comandos que se quieren correr una vez se monte el contenedor
+
+		pgAdmin:
+			depends_on:
+				- db
+			image:dpage/pgadmin4:6.17
+			ports:
+				- "8080:80"
+			environment:
+				- PGADMIN_DEFAULT_PASSWORD=123456
+				- PGADMIN_DEFAULT_EMAIL=superman@google.com
+			volumes:
+				postgres-db
+					external:true //Usado para especificar que debe usar un volumen externo
+			restart: always // Sirve para reiniciar el contenedor si este se detiene
+
+
+										
+
+Situarse en la ruta donde se encuentre el archivo docker-compose.yml y correr el siguiente comando
+
+-- Inicializa el contenedor usando el archivo .yml que se encuentre en la ruta
+docker compose up -d
+
+-- Tira el contenedor
+docker compose down
+
+Detener el docker compose (Borra contenedores y red creados)
+docker compose down
+
+
+Dockerfile
+Archivo que contiene todas las instrucciones requeridas para crear una imagen.
+
+FROM --platform=linux/amd64 node:19.2-alpine //Imagen base, con la plataforma forzada a esa arquitectura
+
+WORKDIR /app //Especificar el working directory
+
+COPY ./build/ /app/ //.build representa la carpeta que quiero copiar, y app la ruta relativa del destino
+
+RUN npm install //Se usa RUN para correr comandos durante la construccion de la imagen, instala todas las dependencias del proyecto
+
+RUN npm test //Para correr pruebas, antes de construir la imagen
+
+RUN rm -rf tests && rm -rf node_modules //Eliminar carpeta de tests y node_modules, ya que no son necesarias para PROD
+
+RUN npm install --prod //Instala solo las dependencias de prod
+		
+CMD ["node", "app.js"] //Comando run de la imagen, o sea, se va a correr cuando se monte el contenedor.
+
+Para correr el dockerfile, debes moverte al path donde se encuentra y correr el siguiente comando
+
+docker build --tag nombreTag . //El punto representa el path donde se encuentra el dockerfile
+
+Reconstruir imagen
+
+docker image tag nombreImagen:tag nombreImagen:nuevoTag
+
+Subir imagen
+
+Crear cuenta en docker hub, crear un repositorio
+Se debe renombrar la imagen local, por el nombre de la imagen del repositorio creado.
+Para hacer push de la imagen, debes loguearte en docker.
+
+Loguearte:
+docker login
+
+Hacer push a la imagen
+
+docker push nombreImagen(username/nombreImagen) tag
+
+Docker ignore
+
+.dockerignore
+
+node_modules/
+DockerFile
+package-lock.json
+.git
+.dockerignore
+.gitignore
+
+Executar comandos dentro del contenedor
+docker exec -it idContenedor /bin/sh
+
+Multistate/multistage
+Procedimiento en el cual se puede dividir el Dockerfile en secciones, buscando que sea mas eficiente y ligero
+
+Alias
+Puedes asignarle un alias a una sección del Dockerfile
+
+FROM node:19.2-alpine AS deps //En este caso, el alias es deps
+
+WORKDIR /app
+
+COPY ./build/ /app/
+
+RUN npm install
+
+
+FROM node:19.2-alpine AS builder
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules //Aqui se hace referencia al stage/step previo y se copia la carpeta node_modules y se pega en ./node_modules
+
+Copiar desde local hacia el contenedor
+docker cp archivo.txt nombreContenedor:/opt

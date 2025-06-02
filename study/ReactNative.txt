@@ -1,0 +1,10 @@
+Instalar herramientas para Android
+
+- Node
+- JDK
+- Watchman 
+
+https://reactnative.dev/docs/set-up-your-environment?platform=android
+
+Comando MacOS/Linux para obtener el JDK path
+/usr/libexec/java_home -v 1.8

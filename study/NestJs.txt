@@ -269,4 +269,55 @@ loadUsers () {
   configService.get<string>("db") <-- Aquí se obtiene los valores de las variables de entorno
 }
 
+=================================================
 
+Conectar con DB 
+
+Instalar TYPEORM con Postgres
+
+npm i --save @nestjs/typeorm typeorm pg
+
+App.module.ts
+
+@Module({
+  imports:[
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type:'postgres',
+      host:process.env.DB_HOST,
+      port:5432,
+      database:...,
+      username:...,
+      password:...,
+      autoLoadEntities:true,
+      synchronize:true
+    })
+  ]
+})
+export class AppModule {}
+
+
+Crear entidad typeorm
+
+import {Entity} from "typeorm";
+
+@Entity()
+export class User {
+
+  @PrimaryGeneratedColumn('uuid')
+  id:string;
+  
+  @Column('text', {unique:true})
+  name:string;
+
+}
+
+Ligar entidad con su module
+
+@Module({
+  ...controllers,providers,
+  imports:[TypeOrmModule.forFeature([Product])]
+})
+export class UserModule {
+  
+}
