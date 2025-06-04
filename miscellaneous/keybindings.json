@@ -1,5 +1,6 @@
-// Coloque sus atajos de teclado en este archivo para sobreescribir los valores predeterminados
+// Place your key bindings in this file to override the defaults
 [
+  //Moverse entre tabs
   {
     "key": "alt+l",
     "command": "workbench.action.nextEditor"
@@ -8,189 +9,173 @@
     "key": "alt+h",
     "command": "workbench.action.previousEditor"
   },
+  //Ir a
+  // {
+  //   "key": "alt+w",
+  //   "command": "editor.action.goToDeclaration"
+  // },
   {
-    "key": "alt+q",
-    "command": "workbench.action.closeActiveEditor"
+    "key": "alt+w",
+    "command": "editor.action.goToDeclaration"
   },
-  //Abrir explorador
+  //Seleccionar progresivamente
   {
-    "key": "cmd+1",
-    "command": "workbench.view.explorer"
+    "key": "ctrl+w",
+    "command": "editor.action.smartSelect.grow",
+    "when": "editorTextFocus"
   },
   //Buscar archivos
   {
     "key": "shift shift",
     "command": "workbench.action.quickOpen"
   },
+  //Moverte al arbol de directorios
   {
-    "key": "alt+r",
-    "command": "code-runner.run"
+    "key": "ctrl+e",
+    "command": "workbench.view.explorer",
+    "when": "viewContainer.workbench.view.explorer.enabled"
+  },
+  // {
+  //   "key": "alt+e",
+  //   "command": "workbench.view.explorer",
+  //   "when": "viewContainer.workbench.view.explorer.enabled"
+  // },
+  //Subir/bajar una linea
+  {
+    "key": "alt+down",
+    "command": "editor.action.moveLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
   },
   {
-    "key": "alt+2",
-    "command": "cursorLineEnd"
+    "key": "alt+up",
+    "command": "editor.action.moveLinesUpAction",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  //Comentar código
+  {
+    "key": "ctrl+/",
+    "command": "editor.action.commentLine",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  //Seleccionar sugerencias
+  {
+    "key": "tab",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
   },
   {
-    "key": "alt+d",
-    "command": "editor.action.copyLinesDownAction"
+    "key": "down",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
   },
   {
-    "key": "cmd+1",
-    "command": "-workbench.action.focusFirstEditorGroup"
+    "key": "ctrl+tab",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
   },
   {
-    "key": "alt+k",
-    "command": "-editor.action.accessibilityHelpConfigureKeybindings",
-    "when": "accessibilityHelpIsShown && accessibleViewHasUnassignedKeybindings"
+    "key": "up",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  //Organizar imports
+  {
+    "key": "ctrl+alt+o",
+    "command": "editor.action.organizeImports",
+    "when": "editorTextFocus && !editorReadonly && supportedCodeAction =~ /(\\s|^)source\\.organizeImports\\b/"
+  },
+  //Cerrar tab
+  {
+    "key": "alt+q",
+    "command": "workbench.action.closeActiveEditor"
+  },
+
+  //Renombrar archivo
+  {
+    "key": "shift+f6",
+    "command": "-workbench.action.focusPreviousPart"
   },
   {
-    "key": "alt+k",
-    "command": "editor.action.pageUpHover",
-    "when": "editorHoverFocused"
+    "key": "shift+f6",
+    "command": "renameFile",
+    "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+  },
+  //Duplicar linea
+  {
+    "key": "ctrl+d",
+    "command": "-editor.action.addSelectionToNextFindMatch",
+    "when": "editorFocus"
   },
   {
-    "key": "pageup",
-    "command": "-editor.action.pageUpHover",
-    "when": "editorHoverFocused"
+    "key": "ctrl+d",
+    "command": "editor.action.copyLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
   },
-  {
-    "key": "alt+j",
-    "command": "editor.action.pageDownHover",
-    "when": "editorHoverFocused"
-  },
-  {
-    "key": "pagedown",
-    "command": "-editor.action.pageDownHover",
-    "when": "editorHoverFocused"
-  },
+  //Scroll
   {
     "key": "alt+j",
     "command": "cursorPageDown",
-    "when": "textInputFocus"
-  },
-  {
-    "key": "pagedown",
-    "command": "-cursorPageDown",
-    "when": "textInputFocus"
+    "when": "editorTextFocus"
   },
   {
     "key": "alt+k",
     "command": "cursorPageUp",
-    "when": "textInputFocus"
+    "when": "editorTextFocus"
   },
+  //Moverse a inicio/fin de la linea
   {
-    "key": "pageup",
-    "command": "-cursorPageUp",
-    "when": "textInputFocus"
+    "key": "alt+2",
+    "command": "type",
+    "args": { "text": "$" },
+    "when": "editorTextFocus"
   },
   {
     "key": "alt+1",
-    "command": "cursorHome",
-    "when": "textInputFocus"
-  },
-  {
-    "key": "cmd+left",
-    "command": "-cursorHome",
-    "when": "textInputFocus"
-  },
-  {
-    "key": "ctrl+w",
-    "command": "-vscode-neovim.send-cmdline",
-    "when": "neovim.init && neovim.mode == 'cmdline'"
-  },
-  {
-    "key": "ctrl+w",
-    "command": "-vscode-neovim.send",
-    "when": "editorTextFocus && neovim.ctrlKeysNormal.w && neovim.init && neovim.mode != 'insert' && editorLangId not in 'neovim.editorLangIdExclusions'"
-  },
-  {
-    "key": "ctrl+w",
-    "command": "-vscode-neovim.send",
-    "when": "editorTextFocus && neovim.ctrlKeysInsert.w && neovim.init && neovim.mode == 'insert' && editorLangId not in 'neovim.editorLangIdExclusions'"
-  },
-  {
-    "key": "ctrl+w -",
-    "command": "-workbench.action.decreaseViewHeight",
-    "when": "!editorTextFocus && !isAuxiliaryWindowFocusedContext && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w q",
-    "command": "-workbench.action.closeActiveEditor",
-    "when": "!editorTextFocus && !filesExplorerFocus && !searchViewletFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w s",
-    "command": "-workbench.action.splitEditorDown",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w v",
-    "command": "-workbench.action.splitEditorRight",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w ctrl+w",
-    "command": "-workbench.action.focusNextGroup",
-    "when": "!editorTextFocus && !filesExplorerFocus && !inSearchEditor && !replaceInputBoxFocus && !searchViewletFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w right",
-    "command": "-workbench.action.navigateRight",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w l",
-    "command": "-workbench.action.navigateRight",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w left",
-    "command": "-workbench.action.navigateLeft",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w h",
-    "command": "-workbench.action.navigateLeft",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w down",
-    "command": "-workbench.action.navigateDown",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w j",
-    "command": "-workbench.action.navigateDown",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w up",
-    "command": "-workbench.action.navigateUp",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w k",
-    "command": "-workbench.action.navigateUp",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w =",
-    "command": "-workbench.action.evenEditorWidths",
-    "when": "!editorTextFocus && !terminalFocus && neovim.mode != 'cmdline'"
-  },
-  {
-    "key": "ctrl+w",
-    "command": "editor.action.smartSelect.expand",
+    "command": "type",
+    "args": { "text": "^" },
     "when": "editorTextFocus"
   },
+  //Buscar texto
   {
-    "key": "ctrl+shift+cmd+right",
-    "command": "-editor.action.smartSelect.expand",
+    "key": "alt+f",
+    "command": "workbench.action.findInFiles"
+  },
+  //Reemplazar texto
+  {
+    "key": "alt+r",
+    "command": "editor.action.startFindReplaceAction",
+    "when": "editorFocus"
+  },
+  //Activar/desactivar terminal
+  {
+    "key": "F12",
+    "command": "workbench.action.terminal.toggleTerminal"
+  },
+  //Activar/desactivar barra lateral
+  // {
+  //   "key": "F11",
+  //   "command": "workbench.action.toggleSidebarVisibility"
+  // },
+  {
+    "key": "F10",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+  //Seleccionar todo
+  {
+    "key": "alt+a",
+    "command": "editor.action.selectAll",
     "when": "editorTextFocus"
   },
+  //Importar librerias faltantes
   {
-    "key": "cmd+f5",
-    "command": "-debug.openView",
-    "when": "!debuggersAvailable"
+    "key": "alt+enter",
+    "command": "editor.action.autoFix",
+    "when": "editorHasCodeActionsProvider && editorTextFocus"
+  },
+  //Seleccionar toda la línea actual
+  {
+    "key": "alt+3",
+    "command": "expandLineSelection",
+    "when": "editorTextFocus"
   }
 ]

@@ -1,6 +1,6 @@
 //? Crea punteros que correspondan a un índice o posición, y se mueve hacia el inicio, final o mitad de un arreglo, basado en ciertas condiciones.
 
-//* Escribe una función sumZero que acepte un array ordenado de números.La función debe retornar el primer par de números que sumados den cero.
+//* Escribe una función sumZero que acepte un array ordenado de números. La función debe retornar el primer par de números que sumados den cero.
 //! Si no encuentra el par que sumados den cero, debe retornar undefined.
 
 function sumZero(arr) {
