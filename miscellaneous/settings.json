@@ -1,5 +1,22 @@
 {
-"editor.minimap.enabled": false,
-"editor.fontSize": 15,
-"editor.matchBrackets": "near"
+  "editor.minimap.enabled": false,
+  "editor.fontSize": 15,
+  "editor.matchBrackets": "near",
+  "editor.formatOnSave": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "terminal.integrated.env.osx": {},
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "workbench.startupEditor": "none",
+  "vscode-neovim.neovimExecutablePaths.darwin": "/opt/homebrew/bin/nvim",
+  "workbench.iconTheme": "material-icon-theme"
 }
