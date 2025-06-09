@@ -1,5 +1,5 @@
 //? Solo funciona con arreglos ordenados, usa divide and conquer
-//? Complejidad O(n)
+//? Complejidad Worst and average case: O(log n) Best case: O(1)
 
 //* Escribe una función que reciba un array y un elemento a buscar.
 //! Debe retornar el índice del elemento a buscar o -1 en el caso de que no lo encuentre
