@@ -1,5 +1,6 @@
 //? Algoritmo de ordenamiento donde los valores mas grandes "bubbles up" a la cima
 //? Se comparan el primer valor del arreglo con el 2do, si el 2do es menor, se cambian de posición, y ahora se compara el mismo valor (el mayor) con el 3er valor del arreglo, y así sucesivamente.
+//? Complejidad Worst and average case: O(n^2)
 
 //! Creamos una función swap que cambie dos valores de un arreglo, usando sus índices.
 function swap(arr, idOne, idTwo) {
@@ -9,8 +10,6 @@ function swap(arr, idOne, idTwo) {
 }
 
 function bubbleSort(arr) {
-  let steps = 0;
-
   //* 1.- Se recorre el arreglo desde el fin hasta el inicio
   for (let i = arr.length; i > -1; i--) {
     //* 1.1.- Se crea una variable para identificar si en el segundo recorrido no hubo necesidad de hacer cambios
