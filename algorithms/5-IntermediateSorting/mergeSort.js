@@ -1,13 +1,7 @@
 //? Algoritmo de ordenamiento que combina la idea de "merge" y "sort"
 //? Explota el hecho de que arreglos de 0 o 1 elementos ya están ordenados
 //? Descompone el arreglo original en pequeños arreglos de 1 o 0 elementos, y luego recrea un nuevo arreglo ordenado
-
-//! Creamos una función swap que cambie dos valores de un arreglo, usando sus índices.
-function swap(arr, idOne, idTwo) {
-  const firstValue = arr[idOne];
-  arr[idOne] = arr[idTwo];
-  arr[idTwo] = firstValue;
-}
+//? Complejidad Worst and average case: O(n log n) space complexity: O(n)
 
 //! Creamos una función que fusione dos arreglos ordenados
 function merge(arrOne, arrTwo) {
