@@ -4,7 +4,31 @@ Instalar herramientas para Android
 - JDK
 - Watchman 
 
+Instalar herramientas para IOS
+
+- Node
+- Watchman 
+- Xcode
+- CocoaPods
+
 https://reactnative.dev/docs/set-up-your-environment?platform=android
+
+*En MacOs, debes darle permisos globales a Watchman sobre los directorios
 
 Comando MacOS/Linux para obtener el JDK path
 /usr/libexec/java_home -v 1.8
+
+Crear nuevo proyecto
+npx @react-native-community/cli@latest init AwesomeProject
+
+Comando para ayudas
+npx react-native doctor
+
+Comando para correr con Android
+npx react-native run-android
+
+Comando para correr con Android
+npx react-native run-ios
+
+Ver todos los simuladores disponibles (El booted es el actual)
+xcrun simctl list devices
