@@ -1,10 +1,10 @@
-Instalar herramientas para Android
+Instalar herramientas para Android (MacOS)
 
 - Node
 - JDK
 - Watchman 
 
-Instalar herramientas para IOS
+Instalar herramientas para IOS (MacOS)
 
 - Node
 - Watchman 
@@ -32,3 +32,37 @@ npx react-native run-ios
 
 Ver todos los simuladores disponibles (El booted es el actual)
 xcrun simctl list devices
+
+Componentes mas usados
+SafeAreaView
+View
+Text
+Pressable
+
+Usar button
+
+import {Pressable, Platform} from 'react-native';
+
+<Pressable onPress={() => handlePress()} onLongPress={() => handleLongPress()} style={({pressed}) => [styles.button, pressed && styles.pressedButton]}>
+    <Text>Press me</>
+<Pressable>
+
+const styles = StyleSheet.create ({
+    buttonPressed : {
+        backgroundColor: Platform.OS === "android" ? "#000" :"#fff"        
+    }
+})
+
+Los estilos tambien pueden usarse como un listado
+
+<View style={[styles.box, styles.box1]}>
+</View>
+
+
+flex: 1 // Toma todo el espacio disponible
+
+Obtener dimensiones del dispositivo
+
+import {useWindowDimensions} from 'react-native';
+
+const {width, heigth} = useWindowDimensions();
