@@ -26,11 +26,42 @@ var romanToInt = function (s) {
     C: 100,
     D: 500,
     M: 1000,
+    IV: 4,
+    IX: 9,
+    XL: 40,
+    XC: 90,
+    CD: 400,
+    CM: 900,
   };
+
+  const sArr = s.split("");
+  let blocks = [];
+  let result = 0;
+  let pointer = 0;
+
+  while (pointer < sArr.length) {
+    if (
+      sArr[pointer] &&
+      sArr[pointer + 1] &&
+      sArr[pointer] + sArr[pointer + 1] in values
+    ) {
+      blocks.push(sArr[pointer] + sArr[pointer + 1]);
+      pointer = pointer + 2;
+    } else {
+      blocks.push(sArr[pointer]);
+      pointer++;
+    }
+  }
+
+  for (let i = 0; i < blocks.length; i++) {
+    result = result + values[blocks[i]];
+  }
+
+  return result;
 };
 
 console.log(romanToInt("IV")); //4
 console.log(romanToInt("IX")); //9
-// console.log(romanToInt("III")); //3
-// console.log(romanToInt("LVIII")); //58
-// console.log(romanToInt("MCMXCIV")); //1994
+console.log(romanToInt("III")); //3
+console.log(romanToInt("LVIII")); //58
+console.log(romanToInt("MCMXCIV")); //1994

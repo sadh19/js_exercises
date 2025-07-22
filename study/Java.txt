@@ -517,7 +517,7 @@ Métodos clave
 
 =================================================
 
-Spring
+Spring framework
 Es un framework de desarrollo que ofrece una infraestructura completa para construir aplicaciones Java.
 
 Características

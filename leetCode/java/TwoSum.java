@@ -20,15 +20,12 @@ public class TwoSum {
             var complement = target - num[i];
 
             if (mapNums.containsKey(complement) && mapNums.get(complement) != i) {
-                int[] result = { mapNums.get(complement), i };
-                return result;
+                return new int[] { mapNums.get(complement), i };
             }
 
         }
 
-        int[] result = {};
-
-        return result;
+        return new int[] {};
 
     }
 
