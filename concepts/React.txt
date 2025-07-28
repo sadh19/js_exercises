@@ -1,0 +1,171 @@
+- React
+Is a JavaScript library for building user interfaces, particularly for single-page applications (SPAs).
+Component-based: UIs are built from encapsulated, reusable components.
+Declarative: You describe what the UI should look like.
+Virtual DOM: Efficiently updates and renders only changed parts of the UI.
+Unidirectional data flow: Data flows in one direction, improving predictability.
+
+- Por que React
+Por que es una libreria flexible con una curva de aprendizaje corta, especialmente para proyectos con requerimientos muy dinámicos.
+
+- Guard (React Router)
+Is a custom component or logic used to protect routes based on conditions (like auth).
+
+- Single source of truth
+It means that all shared state is stored in one central place, and all components read from that one source.
+It ensures data consistency and predictable UI updates across your app.
+
+- Stale while revalidate (SWR)
+Is a data fetching strategy where:
+1.	It shows cached (stale) data immediately
+2.	Fetches fresh data in the background
+3.	Updates the UI once the new data arrives
+
+- Diferencias entre nodo, element y componente
+Node: Any DOM item (text, comment, element)
+Element: A DOM node that represents an HTML tag
+Component: A reusable function/class that returns UI
+
+- Diferencia entre ReactNode y JSX.Element
+JSX.Element is the specific type returned by JSX (e.g., <div>Hello</div>), while ReactNode is broader — it includes everything React can render: (JSX.Element,strings,numbers,arrays,null, undefined, boolean)
+JSX.Element is a subset of ReactNode.
+
+- Diferencias entre props y state
+Props are external data passed into a component by its parent.
+State is internal data managed within a component.
+
+- Modo estricto 
+Is a development-only tool that helps identify potential problems in your code.
+•	Double-invokes lifecycle methods and useEffect (in dev only)
+•	Warns about deprecated APIs
+•	Detects unexpected side effects
+
+- Que puede desencadenar un re-render
+State or props changes
+
+- Commit
+Is when React applies changes to the DOM after rendering.
+
+- Composition Pattern
+Means building components by combining other components, instead of using inheritance.
+•	More flexible and reusable components
+•	Cleaner architecture
+•	Encourages separation of concerns
+
+- Diferencias entre any, unkown y never
+any = anything, no checks
+unknown = anything, but must check before use
+never = function that throws or infinite loop
+
+- Propósito de la key en listados 
+To help React identify which items have changed, been added, or removed, so it can efficiently update the DOM.
+
+- useLayoutEffect
+Is like useEffect, but it runs synchronously after all DOM mutations, before the browser paints the screen.
+
+- Patrones de diseño mas usados
+1.	Container-Presenter Pattern: Separates logic (container) from UI (presenter).
+2.	Higher-Order Components (HOC): Functions that wrap a component to add behavior (e.g., auth, theming).
+3.	Render Props: Uses a prop as a function to share logic between components.
+4.	Compound Components: Components that work together via shared context (e.g., Tabs, Accordion).
+5.	Hooks Pattern: Extract reusable logic into custom hooks (useFetch, useForm, etc.).
+6.	Controlled vs Uncontrolled Components: Controlled: state managed by React; Uncontrolled: uses refs.
+7.	Context Provider Pattern: Shares global state (e.g., theme, auth) using React Context.
+
+- Debounce
+Is a technique to delay a function call until after a certain time has passed since the last trigger
+
+- JSX/TSX
+Is a syntax extension that lets you write HTML-like code inside JavaScript in React.
+
+- Formas de mejorar el rendimiento de una aplicación hecha con React
+
+1.	Memoization: React.memo for components, useMemo, useCallback for values/functions
+2.	Code splitting: Use React.lazy and Suspense to load components on demand
+3.	Avoid unnecessary re-renders: Optimize props/state
+4.	Efficient state management: Avoid prop drilling and deeply nested updates
+5.	Debounce/throttle expensive operations: Like search input or scroll listeners
+6.	Image optimization: Lazy load images, compress assets
+
+- Diferencias entre class components y functional components
+Syntax (class/functions)
+State (this.state/useState)
+Lifecycle methods (componentDidMount,etc./useEffect, etc.)
+this keyword (Required/Not needed)
+Concise & readable (❌ More verbose / ✅ Cleaner and simpler)
+Hooks support (❌ Not supported /✅ Fully supported)
+
+- Que es el lifting state update
+Lifting state up in React means moving a shared state to the closest common ancestor component so that multiple child components can access and modify it.
+
+When two or more sibling components need to:
+
+Share the same data
+React to changes in that data
+
+You lift the state up to their parent component and pass it down as props.
+
+- Context
+Context is a way to share values (like state, themes, or settings) between components without passing props manually at every level of the tree. It helps avoid “prop drilling”
+
+- Batching
+Batching means React groups multiple state updates into a single render, instead of re-rendering after each setState.
+
+- Reducer
+is a function that takes the current state and an action, and returns the new state.
+It’s used with the useReducer hook to manage complex state logic.
+
+- useReducer
+Is a React hook used to manage complex state logic.
+
+- dispatch
+dispatch is a function returned by useReducer in React.
+You use it to send actions to the reducer, which then decides how to update the state.
+
+- Diferencias entre useState y useReducer
+useState is recommended for simple state and single values, and useReducer for multiple related state values, and when state updates depends en previous state.
+useReducer works on logic based on action types, and its easier to scale
+
+- Buenas prácticas React
+1.	Use Functional Components — Prefer hooks over class components.
+2.	Keep Components Small — One component = one responsibility.
+3.	Use useState and useReducer Wisely — Based on state complexity.
+4.	Use useEffect for Side Effects — Data fetching, subscriptions, etc.
+5.	Extract Logic into Custom Hooks — Reuse and organize stateful logic.
+6.	Use useCallback and useMemo — Optimize performance (only when needed).
+7.	Avoid Prop Drilling — Use Context or a state manager (Redux, Zustand).
+8.	Use Keys in Lists — Always set unique keys in mapped elements.
+9.	Write Meaningful JSX — Use semantic HTML and clear structure.
+10.	Structure Files by Feature — Keep components, hooks, and styles modular.
+11.	Validate Props — With TypeScript or PropTypes.
+12.	Use Error Boundaries — For graceful error handling.
+13.	Test Components — Use tools like Testing Library + Vitest/Jest.
+14.	Don’t Abuse useEffect — Keep it focused and clean.
+
+- Vite
+Is a modern build tool for JavaScript frameworks like React.
+
+- Hook
+Is a special function that lets you use React features (like state or lifecycle) inside functional components.
+
+- React lifecycle
+Describes the stages a component goes through:
+1.	Mounting – when it’s created and added to the DOM
+2.	Updating – when its props or state change
+3.	Unmounting – when it’s removed from the DOM
+
+- State
+Is a built-in object that holds data that can change over time and affects how the component renders.
+State is reactive data — when it changes, the component re-renders.
+
+- Axios
+Is a feature-rich HTTP client that simplifies API calls with automatic JSON parsing, interceptors, request cancellation, and more.
+    
+Interceptors: Is a function that lets you run custom logic before a request is sent or before a response is handled.
+Request cancellation/Abort: Request cancellation lets you abort an HTTP request in progress, preventing state updates on unmounted components and avoiding unnecessary network calls. 
+
+- Diferencias entre observables y promesas
+- useCallback y useMemo
+- CDN
+- Cabeceras HTTP (UserAgent, Authorization)
+

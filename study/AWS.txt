@@ -310,3 +310,69 @@ Almacenamiento de instancias EC2
     - Una zona, ideal para dev, copia de seguridad activada, compatible con EFS-IA
 
 
+===================================================================================================
+
+Edge Location (Puntos de presencia)
+
+
+TTL
+
+===================================================================================================
+
+AWS S3 
+
+- Almacenamiento de escala infinita
+- Permite almacenar objetos (archivos) en buckets(directorios), los cuales deben tener un nombre único a nivel global.
+- Los buckets se definen a nivel de región.
+- Los objetos tienen una clave, la cual es la ruta completa hacia el archivo (prefijo + nombre del objeto)
+- Manejan un versionado opcional
+
+Seguridad en S3
+- Basado en el usuario (Politicas IAM)
+- Basada en recursos (Politicas de bucket/ACL(Lista de control de accesos))
+- Encriptación (Encripta los objetos en S3 utilizando claves de encriptación)
+
+Replicación entre regiones (CRR (Cross Region Replication))/Replicación en la misma región (SRR (Same Region Replication))/
+- Se debe activar el versionado en el origen y destino
+- La copia es asíncrona
+- Los buckets pueden estar en diferentes cuentas.
+
+Clases de almacenamiento S3
+- Standard
+- Estándar infrequent Access (IA)
+- One Zone infrequent acess
+- Glacier instant retrieval
+- Glacier flexible retrieval
+- Glacier Deep archive
+- Glacier intelligent tiering
+
+===================================================================================================
+
+AWS Cloudfront
+
+- Es una CDN (Red de entrega de contenidos)
+- Mejora el rendimiento de lectura, el contenido se almacena en una CACHÉ local en edge location
+- Los archivos se almacenan en caché durante un TTL (Time to Life) quizás un día
+- Mejora la experiencia del usuario
+- La caché vive en cada edge location de Cloudfront
+- Cloudfront identifica cada objeto de la caché mediante la clave de caché  
+- Puedes invalidar parte de la caché utilizando la API CreateInvalidation (puedes invalidar todos los archivos o una ruta especial)
+- Origen múltiple 
+  - Puedes enrutar a distintos tipos de origenes en función del tipo de contenido
+    - Basado en el patrón de ruta:
+      - /api/* : Aplication Load balancer
+      - /* : Bucket S3
+- Grupos de origenes
+  - Para aumentar la alta disponibilidad y hacer conmutación por error, se maneja un grupo de origen primario y otro secundario, si falla el primero, se utiliza el segundo 
+
+Origenes
+  - Bucket s3
+    - Para distribuir archivos y almacenarlos en caché en el borde (edge location)
+    - Seguridad mejorada con Cloudfront Origin Access Identity (OAI)
+    - Cloudfront puede utilizarse como entrada (para subir archivos a S3)
+  - Origen personalizado (HTTP)
+    - Aplication load balancer
+    - Instancias EC2
+    - Sitio Web de S3 (estático)
+    - Cualquier backend HTTP
+    

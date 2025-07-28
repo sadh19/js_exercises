@@ -1,0 +1,55 @@
+- POO
+Is a programming paradigm based on the concept of objects, which contain data (fields or properties) and behavior (methods)
+
+- Pilares POO
+1.	Encapsulation
+    Bundling data and methods that operate on that data within a class, while restricting direct access to some components.
+2.	Abstraction
+    Hiding complex implementation details and exposing only the essential features of an object. Focuses on what an object does, not how it does it.
+3.	Inheritance
+    Mechanism by which one class (child) can inherit fields and methods from another class (parent), promoting code reuse.
+4.	Polymorphism
+    Ability of different classes to be treated as instances of the same interface or parent class, allowing different implementations to be used interchangeably.
+
+- Clase
+Is a blueprint or template for creating objects.
+
+- Objeto
+Is an instance of a class. It represents a real entity with state (data) and behavior (methods) defined by its class.
+
+- Interface
+Is a contract that defines a set of methods that a class must implement, without providing the implementation itself.
+
+- Programación imperativa
+Is a programming paradigm where you write explicit instructions that describe how a program should perform tasks, step by step.
+
+- Programación declarativa
+Is a paradigm where you describe what you want to achieve, without explicitly listing the steps to get there.
+
+- Programación funcional
+Is a programming paradigm that treats computation as the evaluation of pure functions and avoids changing state or mutable data.
+
+- Principios SOLID
+Are a set of five design principles intended to make object-oriented software easier to understand, maintain, and extend.
+
+S — Single Responsibility Principle (SRP): A class should have only one responsibility.
+O — Open/Closed Principle (OCP): Classes should be open for extension but closed for modification.
+L — Liskov Substitution Principle (LSP): Objects of a superclass should be replaceable with objects of a subclass without affecting problems.
+I — Interface Segregation Principle (ISP): Clients should not be forced to depend on interfaces they do not use.
+D — Dependency Inversion Principle (DIP): Depend on abstractions, not on concrete implementations.
+
+- KISS
+A design principle stating that systems and code should be as simple as possible, avoiding unnecessary complexity.
+
+- YAGNI (“You Aren’t Gonna Need It”) 
+Don’t build a feature until you actually need it.
+
+- REST
+REST is an architecture that allows systems to communicate over HTTP using simple, stateless operations on resources.
+
+Stateless: no session data stored on the server
+Resource-based: everything is a resource (e.g., /users/1)
+Standard methods: uses HTTP verbs (GET, POST, etc.)
+JSON/XML: common data formats
+
+

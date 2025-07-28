@@ -1,0 +1,46 @@
+Jest
+
+Unit test
+Is a short, focused test that checks if a single piece of code (like a function or method) works as expected in isolation, without dependencies.
+
+Integration test
+Checks how multiple components or modules work together, ensuring they interact correctly as a group (e.g., a component using a service or API).
+
+E2E test
+Simulates real user behavior by testing the entire application flow—from the UI to the backend—to ensure all parts work together as expected.
+
+Mocking
+Means creating fake versions of functions, modules, or services to simulate their behavior, so you can test code in isolation without relying on real implementations (like APIs or databases).
+
+Snapshots
+Is a saved serialized output of a component’s rendered UI or value, used to detect unexpected changes by comparing future test runs against the stored snapshot.
+
+Jest
+Is a JavaScript testing framework used to write and run tests. It provides tools for unit, integration, and snapshot testing with built-in mocking and assertion support.
+
+Describe
+Is a function used to group related tests together, making your test suite more organized and readable.
+
+It
+Is a function used to define an individual test case, specifying what behavior or output should be tested.
+
+Expect
+Is used to create assertions that verify if a value meets certain conditions in a test.
+
+BeforeAll
+Is a function that runs a setup callback once before all tests in a test suite, useful for expensive or shared setup.
+
+BeforeEach
+Is a function that runs a setup callback before every test in a test suite, useful for initializing conditions.
+ 
+AfterEach
+Is a function that runs a cleanup callback after every test in a test suite, useful for resetting states or mocks.
+ 
+FireEvent
+Is a utility that triggers DOM events (like click, change) directly on elements to simulate user interactions in tests.
+
+UserEvent
+Is a utility that simulates realistic user actions (like typing, clicking, tabbing) by firing multiple related events to mimic actual browser behavior.
+
+WaitFor
+Is used to wait for asynchronous changes in the DOM before making assertions—helpful when testing components that update after API calls or timers.
