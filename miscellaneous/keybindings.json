@@ -59,16 +59,6 @@
   },
   //Seleccionar sugerencias
   {
-    "key": "tab",
-    "command": "selectNextSuggestion",
-    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
-  },
-  {
-    "key": "down",
-    "command": "selectNextSuggestion",
-    "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
-  },
-  {
     "key": "ctrl+tab",
     "command": "selectPrevSuggestion",
     "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
@@ -130,10 +120,22 @@
     "when": "editorTextFocus"
   },
   {
+    "key": "alt+2",
+    "command": "type",
+    "args": { "text": "$" },
+    "when": "editorTextFocus && vim.mode == 'Visual'"
+  },
+  {
     "key": "alt+1",
     "command": "type",
     "args": { "text": "^" },
     "when": "editorTextFocus"
+  },
+  {
+    "key": "alt+1",
+    "command": "type",
+    "args": { "text": "^" },
+    "when": "editorTextFocus && vim.mode == 'Visual'"
   },
   //Buscar texto
   {
@@ -177,5 +179,83 @@
     "key": "alt+3",
     "command": "expandLineSelection",
     "when": "editorTextFocus"
+  },
+  //Quitar f2 binding
+  {
+    "key": "f2",
+    "command": "-editor.action.rename",
+    "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "f2",
+    "command": "editor.action.marker.next",
+    "when": "editorTextFocus"
+  },
+  //Quitar f8 binding
+  {
+    "key": "f8",
+    "command": "-editor.action.marker.nextInFiles",
+    "when": "editorFocus"
+  },
+  {
+    "key": "f8",
+    "command": "workbench.action.debug.stepOver",
+    "when": "debugState == 'stopped'"
+  },
+  {
+    "key": "f9",
+    "command": "workbench.action.debug.continue",
+    "when": "inDebugMode"
+  },
+  //Split vertical
+  {
+    "key": "alt+v",
+    "command": "workbench.action.splitEditorRight"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "workbench.action.focusRightGroup"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "workbench.action.focusLeftGroup"
+  },
+  //Colapsar directorios
+  {
+    "key": "alt+c",
+    "command": "workbench.files.action.collapseExplorerFolders"
+  },
+  //Moverse entre opciones del autocomplete
+  {
+    "key": "tab",
+    "command": "selectNextSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+  {
+    "key": "shift+tab",
+    "command": "selectPrevSuggestion",
+    "when": "suggestWidgetVisible && textInputFocus"
+  },
+  //Moverse entre coincidencias de busqueda de archivos
+  {
+    "key": "tab",
+    "command": "list.focusDown",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "shift+tab",
+    "command": "list.focusUp",
+    "when": "inQuickOpen"
+  },
+  //Moverse entre opciones de quickfix
+  {
+    "key": "tab",
+    "command": "selectNextCodeAction",
+    "when": "codeActionMenuVisible"
+  },
+  {
+    "key": "shift+tab",
+    "command": "selectPrevCodeAction",
+    "when": "codeActionMenuVisible"
   }
 ]

@@ -44,3 +44,7 @@ Is a utility that simulates realistic user actions (like typing, clicking, tabbi
 
 WaitFor
 Is used to wait for asynchronous changes in the DOM before making assertions—helpful when testing components that update after API calls or timers.
+
+jsdom
+react testing library
+diferencias entre Jest y RTL
